@@ -1,4 +1,3 @@
-// Archivo: src/pages/CalendarioSemanal.jsx
 import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
@@ -70,9 +69,9 @@ function CalendarioSemanal() {
         </div>
         <div className="flex items-center gap-6">
           <div className="hidden md:flex gap-6 items-center">
-            <a className="text-on-surface-variant font-medium hover:text-primary transition-colors" href="#">Resumen</a>
-            <a className="text-primary font-bold border-b-2 border-primary pb-1" href="#">Calendario de Entrenamiento</a>
-            <a className="text-on-surface-variant font-medium hover:text-primary transition-colors" href="#">Comunidad</a>
+            <Link className="text-on-surface-variant font-medium hover:text-primary transition-colors" to="/">Resumen</Link>
+            <Link className="text-primary font-bold border-b-2 border-primary pb-1" to="/calendario">Calendario de Entrenamiento</Link>
+            <Link className="text-on-surface-variant font-medium hover:text-primary transition-colors" to="/comunidad">Comunidad</Link>
           </div>
           <div className="flex items-center gap-4">
             <button className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all">notifications</button>
@@ -95,30 +94,30 @@ function CalendarioSemanal() {
           <p className="text-on-surface-variant text-label-md">Rendimiento Élite</p>
         </div>
         <nav className="flex-grow space-y-2 px-3">
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" to="/">
             <span className="material-symbols-outlined">dashboard</span>
             <span className="font-label-md">Panel</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" to="/constructor-rutinas">
             <span className="material-symbols-outlined">fitness_center</span>
             <span className="font-label-md">Constructor de Rutinas</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" to="/sesion-activa">
             <span className="material-symbols-outlined">timer</span>
             <span className="font-label-md">Sesión Activa</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" to="/biblioteca">
             <span className="material-symbols-outlined">menu_book</span>
             <span className="font-label-md">Biblioteca de Ejercicios</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border-r-4 border-primary transition-all group" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border-r-4 border-primary transition-all group" to="/calendario">
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>calendar_month</span>
             <span className="font-label-md">Calendario de Entrenamiento</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" to="/mis-rutinas">
             <span className="material-symbols-outlined">folder_special</span>
             <span className="font-label-md">Mis Rutinas</span>
-          </a>
+          </Link>
         </nav>
         <div className="px-6 mb-8">
           <button className="w-full bg-primary text-on-primary py-3 rounded-xl font-bold custom-glow transition-all active:scale-95">
@@ -126,14 +125,14 @@ function CalendarioSemanal() {
           </button>
         </div>
         <div className="px-3 border-t border-outline-variant/20 pt-4 space-y-2">
-          <a className="flex items-center gap-3 px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
+          <Link className="flex items-center gap-3 px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" to="/soporte">
             <span className="material-symbols-outlined">help</span>
             <span className="font-label-md">Soporte</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" to="/configuracion">
             <span className="material-symbols-outlined">settings</span>
             <span className="font-label-md">Configuración</span>
-          </a>
+          </Link>
         </div>
       </aside>
 
