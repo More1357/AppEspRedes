@@ -1,15 +1,58 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { updatePerfil } from '../services/api';
 
 function ConfigurarPerfil() {
   const [pasoActual, setPasoActual] = useState(1);
+  const [formData, setFormData] = useState({
+    nombre: '',
+    edad: '',
+    peso: '',
+    altura: '',
+    nivelActividad: 'ACTIVO'
+  });
+  const [loading, setLoading] = useState(false);
   const totalPasos = 3;
 
-  const siguientePaso = (paso) => {
-    setPasoActual(paso);
+  const siguientePaso = () => {
+    setPasoActual(pasoActual + 1);
   };
 
-  const terminarConfiguracion = () => {
-    alert('Configuración de perfil. ¡Bienvenido a nombre Pro!');
+  const volverPaso = () => {
+    setPasoActual(pasoActual - 1);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const terminarConfiguracion = async () => {
+    setLoading(true);
+    try {
+      const resultado = await updatePerfil({
+        nombre: formData.nombre,
+        edad: parseInt(formData.edad),
+        peso: parseFloat(formData.peso),
+        altura: parseInt(formData.altura),
+        nivelActividad: formData.nivelActividad
+      });
+      
+      if (resultado.success) {
+        // Actualizar usuario en localStorage
+        const usuarioActual = JSON.parse(localStorage.getItem('usuario') || '{}');
+        usuarioActual.nombre = formData.nombre;
+        localStorage.setItem('usuario', JSON.stringify(usuarioActual));
+        
+        alert('✅ Perfil configurado correctamente');
+        window.location.href = '/calendario';
+      } else {
+        alert('❌ Error al guardar el perfil');
+      }
+    } catch (error) {
+      alert('❌ ' + error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -17,7 +60,7 @@ function ConfigurarPerfil() {
       
       {/* Header - fijo arriba */}
       <header className="fixed top-0 left-0 w-full z-40 flex justify-between items-center px-gutter h-16 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20">
-        <div className="font-headline-lg text-headline-lg font-extrabold text-primary">nombre</div>
+        <div className="font-headline-lg text-headline-lg font-extrabold text-primary">FitFlow</div>
         <div className="flex items-center gap-4"></div>
       </header>
 
@@ -48,7 +91,7 @@ function ConfigurarPerfil() {
           {pasoActual === 1 && (
             <section className="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl p-stack-lg flex flex-col gap-stack-md">
               <div className="flex flex-col gap-base">
-                <h1 className="font-headline-lg text-headline-lg text-on-surface">Bienvenido a nombre</h1>
+                <h1 className="font-headline-lg text-headline-lg text-on-surface">Bienvenido a FitFlow</h1>
                 <p className="font-body-md text-body-md text-on-surface-variant">
                   Vamos a comenzar con lo básico. ¿A quién estamos entrenando hoy?
                 </p>
@@ -59,14 +102,20 @@ function ConfigurarPerfil() {
                   <label className="font-label-md text-label-md text-primary">Nombre Completo</label>
                   <input 
                     type="text"
+                    name="nombre"
+                    value={formData.nombre}
+                    onChange={handleInputChange}
                     className="bg-surface border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container rounded-lg p-4 text-on-surface outline-none transition-all" 
-                    placeholder="e.g. Alex Rivera"
+                    placeholder="Ej: Alex Rivera"
                   />
                 </div>
                 <div className="flex flex-col gap-base">
                   <label className="font-label-md text-label-md text-primary">Edad</label>
                   <input 
                     type="number"
+                    name="edad"
+                    value={formData.edad}
+                    onChange={handleInputChange}
                     className="bg-surface border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container rounded-lg p-4 text-on-surface outline-none transition-all" 
                     placeholder="25"
                   />
@@ -75,8 +124,9 @@ function ConfigurarPerfil() {
               
               <div className="mt-stack-sm">
                 <button 
-                  onClick={() => siguientePaso(2)}
-                  className="w-full py-4 bg-primary-container text-on-primary-container font-headline-md text-headline-md rounded-xl glow-cyan hover:glow-cyan-intense active:scale-95 transition-all"
+                  onClick={siguientePaso}
+                  disabled={!formData.nombre || !formData.edad}
+                  className="w-full py-4 bg-primary-container text-on-primary-container font-headline-md text-headline-md rounded-xl glow-cyan hover:glow-cyan-intense active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Continuar
                 </button>
@@ -84,6 +134,7 @@ function ConfigurarPerfil() {
             </section>
           )}
 
+          {/* PASO 2: Métricas */}
           {pasoActual === 2 && (
             <section className="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl p-stack-lg flex flex-col gap-stack-md">
               <div className="flex flex-col gap-base">
@@ -98,6 +149,9 @@ function ConfigurarPerfil() {
                   <label className="font-label-md text-label-md text-primary">Peso (kg)</label>
                   <input 
                     type="number"
+                    name="peso"
+                    value={formData.peso}
+                    onChange={handleInputChange}
                     className="bg-surface border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container rounded-lg p-4 text-on-surface outline-none transition-all" 
                     placeholder="70"
                   />
@@ -106,6 +160,9 @@ function ConfigurarPerfil() {
                   <label className="font-label-md text-label-md text-primary">Altura (cm)</label>
                   <input 
                     type="number"
+                    name="altura"
+                    value={formData.altura}
+                    onChange={handleInputChange}
                     className="bg-surface border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container rounded-lg p-4 text-on-surface outline-none transition-all" 
                     placeholder="175"
                   />
@@ -114,13 +171,14 @@ function ConfigurarPerfil() {
               
               <div className="flex flex-col gap-stack-sm pt-stack-sm">
                 <button 
-                  onClick={() => siguientePaso(3)}
-                  className="w-full py-4 bg-primary-container text-on-primary-container font-headline-md text-headline-md rounded-xl glow-cyan hover:glow-cyan-intense active:scale-95 transition-all"
+                  onClick={siguientePaso}
+                  disabled={!formData.peso || !formData.altura}
+                  className="w-full py-4 bg-primary-container text-on-primary-container font-headline-md text-headline-md rounded-xl glow-cyan hover:glow-cyan-intense active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Siguiente Paso
                 </button>
                 <button 
-                  onClick={() => siguientePaso(1)}
+                  onClick={volverPaso}
                   className="w-full py-2 text-on-surface-variant font-label-md text-label-md hover:text-on-surface transition-colors"
                 >
                   Volver
@@ -140,9 +198,15 @@ function ConfigurarPerfil() {
               </div>
               
               <div className="flex flex-col gap-stack-sm">
-                {/* Sedentario */}
                 <label className="group cursor-pointer">
-                  <input type="radio" name="actividad" className="hidden peer" defaultChecked={false} />
+                  <input 
+                    type="radio" 
+                    name="nivelActividad" 
+                    value="SEDENTARIO"
+                    checked={formData.nivelActividad === 'SEDENTARIO'}
+                    onChange={handleInputChange}
+                    className="hidden peer" 
+                  />
                   <div className="p-4 bg-surface border border-outline-variant rounded-xl flex items-center gap-4 transition-all peer-checked:border-primary-container peer-checked:bg-primary-container/10">
                     <div className="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center text-on-surface-variant peer-checked:text-primary">
                       <span className="material-symbols-outlined">chair</span>
@@ -157,9 +221,15 @@ function ConfigurarPerfil() {
                   </div>
                 </label>
 
-                {/* Activo */}
                 <label className="group cursor-pointer">
-                  <input type="radio" name="actividad" className="hidden peer" defaultChecked={true} />
+                  <input 
+                    type="radio" 
+                    name="nivelActividad" 
+                    value="ACTIVO"
+                    checked={formData.nivelActividad === 'ACTIVO'}
+                    onChange={handleInputChange}
+                    className="hidden peer" 
+                  />
                   <div className="p-4 bg-surface border border-outline-variant rounded-xl flex items-center gap-4 transition-all peer-checked:border-primary-container peer-checked:bg-primary-container/10">
                     <div className="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center text-on-surface-variant peer-checked:text-primary">
                       <span className="material-symbols-outlined">directions_walk</span>
@@ -174,9 +244,15 @@ function ConfigurarPerfil() {
                   </div>
                 </label>
 
-                {/* Muy Activo */}
                 <label className="group cursor-pointer">
-                  <input type="radio" name="actividad" className="hidden peer" defaultChecked={false} />
+                  <input 
+                    type="radio" 
+                    name="nivelActividad" 
+                    value="MUY_ACTIVO"
+                    checked={formData.nivelActividad === 'MUY_ACTIVO'}
+                    onChange={handleInputChange}
+                    className="hidden peer" 
+                  />
                   <div className="p-4 bg-surface border border-outline-variant rounded-xl flex items-center gap-4 transition-all peer-checked:border-primary-container peer-checked:bg-primary-container/10">
                     <div className="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center text-on-surface-variant peer-checked:text-primary">
                       <span className="material-symbols-outlined">bolt</span>
@@ -195,12 +271,13 @@ function ConfigurarPerfil() {
               <div className="flex flex-col gap-stack-sm pt-stack-sm">
                 <button 
                   onClick={terminarConfiguracion}
-                  className="w-full py-4 bg-primary-container text-on-primary-container font-headline-md text-headline-md rounded-xl glow-cyan hover:glow-cyan-intense active:scale-95 transition-all"
+                  disabled={loading}
+                  className="w-full py-4 bg-primary-container text-on-primary-container font-headline-md text-headline-md rounded-xl glow-cyan hover:glow-cyan-intense active:scale-95 transition-all disabled:opacity-50"
                 >
-                  Terminar Etapa de Configuración
+                  {loading ? 'Guardando...' : 'Terminar Configuración'}
                 </button>
                 <button 
-                  onClick={() => siguientePaso(2)}
+                  onClick={volverPaso}
                   className="w-full py-2 text-on-surface-variant font-label-md text-label-md hover:text-on-surface transition-colors"
                 >
                   Volver
