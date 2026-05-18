@@ -1,10 +1,10 @@
-// Archivo: src/pages/inicio.jsx
+// Archivo: src/page/Inicio.jsx
 
 import { useState, useEffect } from 'react';
-import { getHealth } from '../services/api';
+import { getHealth, login, register } from '../services/api';
 
-function inicio() {
-  const [metodoSeleccionado, setMetodoSeleccionado] = useState(null); // 'login' o 'registro'
+function Inicio() {
+  const [metodoSeleccionado, setMetodoSeleccionado] = useState(null);
   const [backendStatus, setBackendStatus] = useState(null);
   const [backendError, setBackendError] = useState(null);
 
@@ -16,16 +16,55 @@ function inicio() {
 
   const handleGoogle = () => {
     alert('Continuar con Google');
-    // Aquí iría la lógica de autenticación con Google
   };
 
-  const handleContinuar = () => {
+  const handleContinuar = async () => {
     if (metodoSeleccionado === 'login') {
-      alert('Iniciando sesión...');
-      // Navegar a calendario semanal
+      const email = prompt("Ingresá tu email:");
+      const password = prompt("Ingresá tu contraseña:");
+      
+      if (!email || !password) {
+        alert("Completá ambos campos");
+        return;
+      }
+      
+      try {
+        const resultado = await login(email, password);
+        if (resultado.success) {
+          localStorage.setItem('token', resultado.data.token);
+          localStorage.setItem('usuario', JSON.stringify(resultado.data.usuario));
+          alert('✅ Login exitoso');
+          window.location.href = '/calendario';
+        } else {
+          alert(resultado.message || 'Error en el login');
+        }
+      } catch (error) {
+        alert('❌ ' + error.message);
+      }
+      
     } else if (metodoSeleccionado === 'registro') {
-      alert('Redirigiendo a configuración de perfil...');
-      // Navegar a onboarding
+      const nombre = prompt("Ingresá tu nombre:");
+      const email = prompt("Ingresá tu email:");
+      const password = prompt("Ingresá tu contraseña:");
+      
+      if (!nombre || !email || !password) {
+        alert("Completá todos los campos");
+        return;
+      }
+      
+      try {
+        const resultado = await register(nombre, email, password);
+        if (resultado.success) {
+          localStorage.setItem('token', resultado.data.token);
+          localStorage.setItem('usuario', JSON.stringify(resultado.data.usuario));
+          alert('✅ Registro exitoso');
+          window.location.href = '/configurar-perfil';
+        } else {
+          alert(resultado.message || 'Error en el registro');
+        }
+      } catch (error) {
+        alert('❌ ' + error.message);
+      }
     }
   };
 
@@ -53,38 +92,40 @@ function inicio() {
               <p className="font-body-md text-body-md text-on-surface-variant">
                 Elige tu camino para comenzar tu sesión.
               </p>
-                <p className="font-body-sm text-body-sm text-on-surface-variant mt-2">
-                  Estado del backend: {backendStatus ? backendStatus : backendError ? `Error: ${backendError}` : 'Cargando...'}
-                </p>
-                <button
-                  onClick={() => setMetodoSeleccionado('login')}
-                  className="w-full text-left p-5 bg-surface border border-outline-variant rounded-xl hover:border-primary-container hover:bg-primary-container/5 transition-all group"
-                >
-                  <h2 className="font-headline-md text-headline-md text-primary mb-1">
-                    Iniciar Sesión
-                  </h2>
-                  <p className="font-body-md text-body-md text-on-surface-variant">
-                    Accede directamente a tu <strong>Calendario Semanal</strong>.
-                  </p>
-                </button>
+              <p className="font-body-sm text-body-sm text-on-surface-variant mt-2">
+                Estado del backend: {backendStatus ? backendStatus : backendError ? `Error: ${backendError}` : 'Cargando...'}
+              </p>
+            </div>
 
-                {/* Opción: Registrarse */}
-                <button
-                  onClick={() => setMetodoSeleccionado('registro')}
-                  className="w-full text-left p-5 bg-surface border border-outline-variant rounded-xl hover:border-primary-container hover:bg-primary-container/5 transition-all group"
-                >
-                  <h2 className="font-headline-md text-headline-md text-primary mb-1">
-                    Registrarse
-                  </h2>
-                  <p className="font-body-md text-body-md text-on-surface-variant">
-                    Crea tu <strong>Perfil de Rendimiento y Onboarding</strong>.
-                  </p>
-                </button>
-              </div>
+            {/* Opción: Iniciar Sesión */}
+            <button
+              onClick={() => setMetodoSeleccionado('login')}
+              className="w-full text-left p-5 bg-surface border border-outline-variant rounded-xl hover:border-primary-container hover:bg-primary-container/5 transition-all group mb-4"
+            >
+              <h2 className="font-headline-md text-headline-md text-primary mb-1">
+                Iniciar Sesión
+              </h2>
+              <p className="font-body-md text-body-md text-on-surface-variant">
+                Accede directamente a tu <strong>Calendario Semanal</strong>.
+              </p>
+            </button>
+
+            {/* Opción: Registrarse */}
+            <button
+              onClick={() => setMetodoSeleccionado('registro')}
+              className="w-full text-left p-5 bg-surface border border-outline-variant rounded-xl hover:border-primary-container hover:bg-primary-container/5 transition-all group"
+            >
+              <h2 className="font-headline-md text-headline-md text-primary mb-1">
+                Registrarse
+              </h2>
+              <p className="font-body-md text-body-md text-on-surface-variant">
+                Crea tu <strong>Perfil de Rendimiento y Onboarding</strong>.
+              </p>
+            </button>
 
             {/* Si hay método seleccionado, mostrar confirmación */}
             {metodoSeleccionado && (
-              <div className="flex flex-col gap-stack-md">
+              <div className="flex flex-col gap-stack-md mt-6">
                 <div className="text-center p-5 bg-primary-container/10 border border-primary-container/30 rounded-xl">
                   <span className="text-4xl mb-2 block">
                     {metodoSeleccionado === 'login' ? '🔐' : '📝'}
@@ -116,28 +157,6 @@ function inicio() {
               </div>
             )}
 
-            {/* Separador */}
-            <div className="relative flex items-center justify-center my-stack-md">
-              <div className="absolute w-full h-px bg-outline-variant/30"></div>
-              <span className="relative px-4 bg-surface-container-low text-on-surface-variant text-sm font-label-md">
-                O CONTINUAR CON
-              </span>
-            </div>
-
-            {/* Botón de Google */}
-            <button
-              onClick={handleGoogle}
-              className="w-full py-3 flex items-center justify-center gap-3 bg-surface border border-outline-variant rounded-xl hover:bg-surface-container hover:border-primary-container/50 transition-all"
-            >
-              <svg className="w-5 h-5" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-              </svg>
-              <span className="font-label-md text-label-md text-on-surface">Google</span>
-            </button>
-
             {/* Términos y condiciones */}
             <p className="text-center text-xs text-on-surface-variant mt-stack-md">
               Al continuar, aceptas nuestros{" "}
@@ -164,4 +183,4 @@ function inicio() {
   );
 }
 
-export default inicio;
+export default Inicio;
