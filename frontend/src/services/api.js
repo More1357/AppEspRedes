@@ -1,4 +1,6 @@
-export const API_BASE = import.meta.env.VITE_API_URL || '/api'
+export const API_BASE = window.location.pathname.startsWith('/~') 
+  ? `/${window.location.pathname.split('/')[1]}/api` 
+  : '/api';
 
 // Health check
 export async function getHealth() {
