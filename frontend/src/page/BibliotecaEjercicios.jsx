@@ -1,4 +1,3 @@
-// Archivo: src/pages/BibliotecaEjercicios.jsx
 import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
@@ -50,30 +49,30 @@ function BibliotecaEjercicios() {
           <p className="text-label-md font-label-md text-on-surface-variant opacity-70">Rendimiento Élite</p>
         </div>
         <nav className="flex-1 px-4 space-y-2 overflow-y-auto custom-scrollbar">
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200 group" href="#">
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200 group" to="/">
             <span className="material-symbols-outlined text-[20px]">dashboard</span>
             <span className="font-label-md text-label-md">Panel</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" to="/constructor-rutinas">
             <span className="material-symbols-outlined text-[20px]">fitness_center</span>
             <span className="font-label-md text-label-md">Constructor de Rutinas</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" to="/sesion-activa">
             <span className="material-symbols-outlined text-[20px]">timer</span>
             <span className="font-label-md text-label-md">Sesión Activa</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border-r-4 border-primary transition-all duration-200 scale-[0.98]" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border-r-4 border-primary transition-all duration-200 scale-[0.98]" to="/biblioteca">
             <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>menu_book</span>
             <span className="font-label-md text-label-md">Biblioteca de Ejercicios</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" to="/calendario">
             <span className="material-symbols-outlined text-[20px]">calendar_month</span>
             <span className="font-label-md text-label-md">Calendario de Entrenamiento</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" to="/mis-rutinas">
             <span className="material-symbols-outlined text-[20px]">folder_special</span>
             <span className="font-label-md text-label-md">Mis Rutinas</span>
-          </a>
+          </Link>
         </nav>
         <div className="px-6 mt-auto">
           <button className="w-full bg-primary text-on-primary-fixed font-bold py-3 rounded-xl hover:opacity-90 transition-all active:scale-95 shadow-[0_0_20px_rgba(138,235,255,0.2)]">
@@ -81,14 +80,14 @@ function BibliotecaEjercicios() {
           </button>
         </div>
         <div className="px-4 mt-8 space-y-1">
-          <a className="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary transition-colors" href="#">
+          <Link className="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary transition-colors" to="/soporte">
             <span className="material-symbols-outlined text-[18px]">help</span>
             <span className="font-label-md text-label-md">Soporte</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary transition-colors" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary transition-colors" to="/configuracion">
             <span className="material-symbols-outlined text-[18px]">settings</span>
             <span className="font-label-md text-label-md">Configuración</span>
-          </a>
+          </Link>
         </div>
       </aside>
 
@@ -447,7 +446,7 @@ function BibliotecaEjercicios() {
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
           background: #3c494c;
-          border-radius: 10px;
+          borderRadius: 10px;
         }
         @keyframes fade-in {
           from { opacity: 0; }
