@@ -1,4 +1,3 @@
-// Archivo: src/pages/MisRutinas.jsx
 import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
@@ -65,30 +64,30 @@ function MisRutinas() {
           <p className="text-label-md font-label-md text-on-surface-variant">Rendimiento Élite</p>
         </div>
         <nav className="flex-1 px-4 space-y-2">
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" href="#">
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" to="/">
             <span className="material-symbols-outlined">dashboard</span>
             <span className="font-label-md">Panel</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" to="/constructor-rutinas">
             <span className="material-symbols-outlined">fitness_center</span>
             <span className="font-label-md">Constructor de Rutinas</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" to="/sesion-activa">
             <span className="material-symbols-outlined">timer</span>
             <span className="font-label-md">Sesión Activa</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" to="/biblioteca">
             <span className="material-symbols-outlined">menu_book</span>
             <span className="font-label-md">Biblioteca de Ejercicios</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" to="/calendario">
             <span className="material-symbols-outlined">calendar_month</span>
             <span className="font-label-md">Calendario de Entrenamiento</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border-r-4 border-primary transition-all scale-[0.98]" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border-r-4 border-primary transition-all scale-[0.98]" to="/mis-rutinas">
             <span className="material-symbols-outlined">folder_special</span>
             <span className="font-label-md">Mis Rutinas</span>
-          </a>
+          </Link>
         </nav>
         <div className="px-4 mb-6">
           <button className="w-full py-4 bg-primary text-on-primary font-headline-md rounded-xl glow-primary hover:opacity-90 active:scale-95 transition-all">
@@ -96,14 +95,14 @@ function MisRutinas() {
           </button>
         </div>
         <div className="px-4 pt-4 border-t border-outline-variant/20 space-y-2">
-          <a className="flex items-center gap-3 px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" href="#">
+          <Link className="flex items-center gap-3 px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" to="/soporte">
             <span className="material-symbols-outlined">help</span>
             <span className="font-label-md">Soporte</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" href="#">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" to="/configuracion">
             <span className="material-symbols-outlined">settings</span>
             <span className="font-label-md">Configuración</span>
-          </a>
+          </Link>
         </div>
       </aside>
 
@@ -165,9 +164,9 @@ function MisRutinas() {
                 <h4 className="font-headline-md text-headline-md text-on-surface">Mejor Rendimiento</h4>
                 <p className="text-on-surface-variant mt-2 font-body-md">'Hipertrofia Lunes' es tu rutina más consistente.</p>
               </div>
-              <a className="text-secondary font-label-md flex items-center gap-2 hover:gap-3 transition-all mt-4" href="#">
+              <Link className="text-secondary font-label-md flex items-center gap-2 hover:gap-3 transition-all mt-4" to="/analisis">
                 Ver análisis <span className="material-symbols-outlined">arrow_forward</span>
-              </a>
+              </Link>
             </div>
           </div>
 
