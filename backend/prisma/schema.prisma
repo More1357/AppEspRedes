@@ -8,29 +8,21 @@ datasource db {
 }
 
 model Usuario {
-  id             Int      @id @default(autoincrement())
-  email          String   @unique
-  password       String
-  nombre         String
-  edad           Int?
-  peso           Float?
-  altura         Int?
-  nivelActividad String?   // SEDENTARIO, ACTIVO, MUY_ACTIVO
-  rol            String   @default("USER")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  // Relaciones
-  proyectos Proyecto[]  // ← AGREGAR ESTA LÍNEA (es la relación inversa)
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  nombre    String
+  rol       String   @default("USER")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  proyectos Proyecto[]
 }
 
 model Proyecto {
   id        Int      @id @default(autoincrement())
   nombre    String
   usuarioId Int
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  // Relaciones
-  usuario Usuario @relation(fields: [usuarioId], references: [id])
 }
