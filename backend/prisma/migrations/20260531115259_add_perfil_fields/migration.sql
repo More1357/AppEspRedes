@@ -1,0 +1,4 @@
+ALTER TABLE "Usuario" ADD COLUMN "edad" INTEGER;
+ALTER TABLE "Usuario" ADD COLUMN "peso" REAL;
+ALTER TABLE "Usuario" ADD COLUMN "altura" INTEGER;
+ALTER TABLE "Usuario" ADD COLUMN "nivelActividad" TEXT;
