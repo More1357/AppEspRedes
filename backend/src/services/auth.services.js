@@ -2,48 +2,56 @@ import bcrypt from 'bcrypt'
 import { usuarioRepository } from '../repositories/usuario.repository.js'
 import { generarToken } from '../utils/jwt.js'
 
-
 export const authService = {
   async login(email, password) {
-    // 1. Buscar usuario
+    // Buscar usuario
     const usuario = await usuarioRepository.findByEmail(email)
     if (!usuario) {
       throw new Error('Credenciales incorrectas')
     }
     
-    // 2. Verificar password
+    // Verificar password
     const valido = await bcrypt.compare(password, usuario.password)
     if (!valido) {
       throw new Error('Credenciales incorrectas')
     }
     
-    // 3. Generar token
-    const token = generarToken({ id: usuario.id, email: usuario.email })
+    // Generar token con id, email y rol
+    const token = generarToken({ 
+      id: usuario.id, 
+      email: usuario.email,
+      rol: usuario.rol
+    })
     
-    // 4. No enviar la contraseña
+    // No enviar la contraseña
     const { password: _, ...usuarioSinPassword } = usuario
     
     return { token, usuario: usuarioSinPassword }
   },
   
   async register(data) {
-    // 1. Verificar si ya existe
+    // Verificar si ya existe
     const existe = await usuarioRepository.findByEmail(data.email)
     if (existe) {
       throw new Error('El email ya está registrado')
     }
     
-    // 2. Hashear password
+    // Hashear password
     const hashedPassword = await bcrypt.hash(data.password, 10)
     
-    // 3. Crear usuario
+    // Crear usuario solo con los campos permitidos
     const usuario = await usuarioRepository.create({
-      ...data,
-      password: hashedPassword
+      email: data.email,
+      password: hashedPassword,
+      nombre: data.nombre
     })
     
-    // 4. Generar token
-    const token = generarToken({ id: usuario.id, email: usuario.email })
+    // Generar token
+    const token = generarToken({ 
+      id: usuario.id, 
+      email: usuario.email,
+      rol: usuario.rol
+    })
     
     const { password: _, ...usuarioSinPassword } = usuario
     return { token, usuario: usuarioSinPassword }
