@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+// Archivo: src/page/BibliotecaEjercicios.jsx
 import { useState, useEffect } from 'react';
 
 function BibliotecaEjercicios() {
@@ -20,13 +20,21 @@ function BibliotecaEjercicios() {
       instrucciones
     });
     setModalAbierto(true);
-    document.body.style.overflow = 'hidden';
   };
 
   const cerrarModal = () => {
     setModalAbierto(false);
-    document.body.style.overflow = '';
   };
+
+  // Bloquear scroll del body mientras el modal está abierto
+  useEffect(() => {
+    if (!modalAbierto) return;
+
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [modalAbierto]);
 
   // Cerrar modal con tecla ESC
   useEffect(() => {
@@ -49,30 +57,30 @@ function BibliotecaEjercicios() {
           <p className="text-label-md font-label-md text-on-surface-variant opacity-70">Rendimiento Élite</p>
         </div>
         <nav className="flex-1 px-4 space-y-2 overflow-y-auto custom-scrollbar">
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200 group" to="/">
+          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200 group" href="#">
             <span className="material-symbols-outlined text-[20px]">dashboard</span>
             <span className="font-label-md text-label-md">Panel</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" to="/constructor-rutinas">
+          </a>
+          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" href="#">
             <span className="material-symbols-outlined text-[20px]">fitness_center</span>
             <span className="font-label-md text-label-md">Constructor de Rutinas</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" to="/sesion-activa">
+          </a>
+          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" href="#">
             <span className="material-symbols-outlined text-[20px]">timer</span>
             <span className="font-label-md text-label-md">Sesión Activa</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border-r-4 border-primary transition-all duration-200 scale-[0.98]" to="/biblioteca">
+          </a>
+          <a className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border-r-4 border-primary transition-all duration-200 scale-[0.98]" href="#">
             <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>menu_book</span>
             <span className="font-label-md text-label-md">Biblioteca de Ejercicios</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" to="/calendario">
+          </a>
+          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" href="#">
             <span className="material-symbols-outlined text-[20px]">calendar_month</span>
             <span className="font-label-md text-label-md">Calendario de Entrenamiento</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" to="/mis-rutinas">
+          </a>
+          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" href="#">
             <span className="material-symbols-outlined text-[20px]">folder_special</span>
             <span className="font-label-md text-label-md">Mis Rutinas</span>
-          </Link>
+          </a>
         </nav>
         <div className="px-6 mt-auto">
           <button className="w-full bg-primary text-on-primary-fixed font-bold py-3 rounded-xl hover:opacity-90 transition-all active:scale-95 shadow-[0_0_20px_rgba(138,235,255,0.2)]">
@@ -80,14 +88,14 @@ function BibliotecaEjercicios() {
           </button>
         </div>
         <div className="px-4 mt-8 space-y-1">
-          <Link className="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary transition-colors" to="/soporte">
+          <a className="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary transition-colors" href="#">
             <span className="material-symbols-outlined text-[18px]">help</span>
             <span className="font-label-md text-label-md">Soporte</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary transition-colors" to="/configuracion">
+          </a>
+          <a className="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary transition-colors" href="#">
             <span className="material-symbols-outlined text-[18px]">settings</span>
             <span className="font-label-md text-label-md">Configuración</span>
-          </Link>
+          </a>
         </div>
       </aside>
 
@@ -425,47 +433,6 @@ function BibliotecaEjercicios() {
           </div>
         </div>
       )}
-      
-      {/* Estilos incrustados para componentes personalizados */}
-      <style jsx>{`
-        .material-symbols-outlined {
-          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .active-pill {
-          box-shadow: 0 0 15px rgba(138, 235, 255, 0.3);
-        }
-        .glass-panel {
-          background: rgba(23, 31, 51, 0.7);
-          backdrop-filter: blur(12px);
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #3c494c;
-          borderRadius: 10px;
-        }
-        @keyframes fade-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes zoom-in {
-          from { transform: scale(0.95); }
-          to { transform: scale(1); }
-        }
-        .animate-in {
-          animation-duration: 0.3s;
-        }
-        .fade-in {
-          animation-name: fade-in;
-        }
-        .zoom-in {
-          animation-name: zoom-in;
-        }
-      `}</style>
     </div>
   );
 }
