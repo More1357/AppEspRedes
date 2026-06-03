@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
 import Inicio from './page/Inicio';
 import BibliotecaEjercicios from './page/BibliotecaEjercicios';
 import CalendarioSemanal from './page/CalendarioSemanal';
@@ -10,10 +11,22 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Inicio />} />
-        <Route path="/biblioteca" element={<BibliotecaEjercicios />} />
-        <Route path="/calendario" element={<CalendarioSemanal />} />
-        <Route path="/mis-rutinas" element={<MisRutinas />} />
-        <Route path="/configurar-perfil" element={<ConfigurarPerfil />} />
+
+        <Route path="/biblioteca" element={
+          <ProtectedRoute><BibliotecaEjercicios /></ProtectedRoute>
+        } />
+        <Route path="/calendario" element={
+          <ProtectedRoute><CalendarioSemanal /></ProtectedRoute>
+        } />
+        <Route path="/mis-rutinas" element={
+          <ProtectedRoute><MisRutinas /></ProtectedRoute>
+        } />
+        <Route path="/configurar-perfil" element={
+          <ProtectedRoute><ConfigurarPerfil /></ProtectedRoute>
+        } />
+
+        {/* Catch-all: cualquier ruta desconocida redirige al inicio */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
