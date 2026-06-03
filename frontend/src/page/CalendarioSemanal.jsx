@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+// Archivo: src/page/CalendarioSemanal.jsx
 import { useState, useEffect } from 'react';
 
 function CalendarioSemanal() {
@@ -9,13 +9,13 @@ function CalendarioSemanal() {
     console.log('Recordatorios:', !recordatoriosActivados ? 'Activados' : 'Desactivados');
   };
 
-  // Manejadores de arrastrar y soltar
+  // Manejadores de arrastrar y soltar (sin useEffect, van directo en JSX)
   const handleDragStart = (e) => {
-    e.target.classList.add('opacity-40');
+    e.currentTarget.classList.add('opacity-40');
   };
 
   const handleDragEnd = (e) => {
-    e.target.classList.remove('opacity-40');
+    e.currentTarget.classList.remove('opacity-40');
   };
 
   const handleDragOver = (e) => {
@@ -33,32 +33,6 @@ function CalendarioSemanal() {
     // La lógica de movimiento iría aquí
   };
 
-  // Agregar listeners de arrastre después de que el componente se monte
-  useEffect(() => {
-    document.querySelectorAll('[draggable="true"]').forEach(item => {
-      item.addEventListener('dragstart', handleDragStart);
-      item.addEventListener('dragend', handleDragEnd);
-    });
-
-    document.querySelectorAll('.drag-target').forEach(zone => {
-      zone.addEventListener('dragover', handleDragOver);
-      zone.addEventListener('dragleave', handleDragLeave);
-      zone.addEventListener('drop', handleDrop);
-    });
-
-    return () => {
-      document.querySelectorAll('[draggable="true"]').forEach(item => {
-        item.removeEventListener('dragstart', handleDragStart);
-        item.removeEventListener('dragend', handleDragEnd);
-      });
-      document.querySelectorAll('.drag-target').forEach(zone => {
-        zone.removeEventListener('dragover', handleDragOver);
-        zone.removeEventListener('dragleave', handleDragLeave);
-        zone.removeEventListener('drop', handleDrop);
-      });
-    };
-  }, []);
-
   return (
     <div className="bg-background text-on-surface font-body-md selection:bg-primary selection:text-on-primary min-h-screen">
       
@@ -69,9 +43,9 @@ function CalendarioSemanal() {
         </div>
         <div className="flex items-center gap-6">
           <div className="hidden md:flex gap-6 items-center">
-            <Link className="text-on-surface-variant font-medium hover:text-primary transition-colors" to="/">Resumen</Link>
-            <Link className="text-primary font-bold border-b-2 border-primary pb-1" to="/calendario">Calendario de Entrenamiento</Link>
-            <Link className="text-on-surface-variant font-medium hover:text-primary transition-colors" to="/comunidad">Comunidad</Link>
+            <a className="text-on-surface-variant font-medium hover:text-primary transition-colors" href="#">Resumen</a>
+            <a className="text-primary font-bold border-b-2 border-primary pb-1" href="#">Calendario de Entrenamiento</a>
+            <a className="text-on-surface-variant font-medium hover:text-primary transition-colors" href="#">Comunidad</a>
           </div>
           <div className="flex items-center gap-4">
             <button className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all">notifications</button>
@@ -79,7 +53,7 @@ function CalendarioSemanal() {
             <div className="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden">
               <img 
                 className="w-full h-full object-cover" 
-                alt="Un atleta profesional enfocado en iluminación cinematográfica de alto contraste, mirando directamente a la cámara. El fondo es un gimnasio moderno y oscuro con sutiles reflejos de cian eléctrico en superficies limpias. La imagen es nítida, con una estética de tonos fríos y autoritaria que coincide con la identidad de la marca FitFlow." 
+                alt="Perfil de usuario" 
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAF3KB3-0N-iax1npRi8GOYzZybUB001LrSoSAZ8Hhx_qXkeMT99at4fuA3WV5H8ohKV711cIhFc8Y7JF-eLFDD-CAS7gKg6ETlk2Wh4Bp-juIZqCrjC_qVkJCbd1gZgdBbXOL8GgAAnIYRg6RX1_tbgrhctbGyiLa04NRRwaAujOZqIIhud1mGNq1bqsh99SsvLS5qDX9IU62Bx7GTWWEuT-eq3edBdXTz2ZhzdhXlz4k7VwBMaYrkqJIduPfd8hOR5ExlHmxOsTE"
               />
             </div>
@@ -87,37 +61,37 @@ function CalendarioSemanal() {
         </div>
       </header>
 
-      {/* Barra lateral de navegación */}
-      <aside className="fixed left-0 top-0 h-full w-64 z-50 flex flex-col pt-20 pb-8 bg-surface-container border-r border-outline-variant/30 hidden lg:flex">
+      {/* Barra lateral de navegación - CORREGIDO: hidden lg:flex sin flex suelto */}
+      <aside className="fixed left-0 top-0 h-full w-64 z-50 flex-col pt-20 pb-8 bg-surface-container border-r border-outline-variant/30 hidden lg:flex">
         <div className="px-6 mb-8">
           <h2 className="font-headline-md text-headline-md text-primary">FitFlow Pro</h2>
           <p className="text-on-surface-variant text-label-md">Rendimiento Élite</p>
         </div>
         <nav className="flex-grow space-y-2 px-3">
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" to="/">
+          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
             <span className="material-symbols-outlined">dashboard</span>
             <span className="font-label-md">Panel</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" to="/constructor-rutinas">
+          </a>
+          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
             <span className="material-symbols-outlined">fitness_center</span>
             <span className="font-label-md">Constructor de Rutinas</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" to="/sesion-activa">
+          </a>
+          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
             <span className="material-symbols-outlined">timer</span>
             <span className="font-label-md">Sesión Activa</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" to="/biblioteca">
+          </a>
+          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
             <span className="material-symbols-outlined">menu_book</span>
             <span className="font-label-md">Biblioteca de Ejercicios</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border-r-4 border-primary transition-all group" to="/calendario">
+          </a>
+          <a className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border-r-4 border-primary transition-all group" href="#">
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>calendar_month</span>
             <span className="font-label-md">Calendario de Entrenamiento</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" to="/mis-rutinas">
+          </a>
+          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
             <span className="material-symbols-outlined">folder_special</span>
             <span className="font-label-md">Mis Rutinas</span>
-          </Link>
+          </a>
         </nav>
         <div className="px-6 mb-8">
           <button className="w-full bg-primary text-on-primary py-3 rounded-xl font-bold custom-glow transition-all active:scale-95">
@@ -125,14 +99,14 @@ function CalendarioSemanal() {
           </button>
         </div>
         <div className="px-3 border-t border-outline-variant/20 pt-4 space-y-2">
-          <Link className="flex items-center gap-3 px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" to="/soporte">
+          <a className="flex items-center gap-3 px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
             <span className="material-symbols-outlined">help</span>
             <span className="font-label-md">Soporte</span>
-          </Link>
-          <Link className="flex items-center gap-3 px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" to="/configuracion">
+          </a>
+          <a className="flex items-center gap-3 px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
             <span className="material-symbols-outlined">settings</span>
             <span className="font-label-md">Configuración</span>
-          </Link>
+          </a>
         </div>
       </aside>
 
@@ -172,8 +146,18 @@ function CalendarioSemanal() {
                 </div>
                 <button className="material-symbols-outlined text-outline hover:text-primary transition-colors">add_circle</button>
               </div>
-              <div className="glass-card rounded-xl p-4 min-h-[300px] flex flex-col gap-3 drag-target">
-                <div className="bg-surface-container-highest p-4 rounded-lg border-l-4 border-secondary-container cursor-grab active:cursor-grabbing hover:bg-surface-variant transition-colors group" draggable="true">
+              <div 
+                className="glass-card rounded-xl p-4 min-h-[300px] flex flex-col gap-3"
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <div 
+                  className="bg-surface-container-highest p-4 rounded-lg border-l-4 border-secondary-container cursor-grab active:cursor-grabbing hover:bg-surface-variant transition-colors group"
+                  draggable="true"
+                  onDragStart={handleDragStart}
+                  onDragEnd={handleDragEnd}
+                >
                   <div className="flex justify-between items-start mb-2">
                     <span className="bg-secondary/10 text-secondary text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">Hipertrofia</span>
                     <span className="material-symbols-outlined text-on-surface-variant text-sm opacity-0 group-hover:opacity-100 transition-opacity">drag_indicator</span>
@@ -201,8 +185,18 @@ function CalendarioSemanal() {
                 </div>
                 <button className="material-symbols-outlined text-outline hover:text-primary transition-colors">add_circle</button>
               </div>
-              <div className="glass-card rounded-xl p-4 min-h-[300px] flex flex-col gap-3 drag-target">
-                <div className="bg-surface-container-highest p-4 rounded-lg border-l-4 border-primary cursor-grab active:cursor-grabbing hover:bg-surface-variant transition-colors group" draggable="true">
+              <div 
+                className="glass-card rounded-xl p-4 min-h-[300px] flex flex-col gap-3"
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <div 
+                  className="bg-surface-container-highest p-4 rounded-lg border-l-4 border-primary cursor-grab active:cursor-grabbing hover:bg-surface-variant transition-colors group"
+                  draggable="true"
+                  onDragStart={handleDragStart}
+                  onDragEnd={handleDragEnd}
+                >
                   <div className="flex justify-between items-start mb-2">
                     <span className="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">Resistencia</span>
                     <span className="material-symbols-outlined text-on-surface-variant text-sm opacity-0 group-hover:opacity-100 transition-opacity">drag_indicator</span>
@@ -222,8 +216,18 @@ function CalendarioSemanal() {
                 </div>
                 <button className="material-symbols-outlined text-outline hover:text-primary transition-colors">add_circle</button>
               </div>
-              <div className="glass-card rounded-xl p-4 min-h-[300px] flex flex-col gap-3 border-primary/40 ring-1 ring-primary/20 shadow-[0_0_20px_rgba(47,217,244,0.05)]">
-                <div className="bg-surface-container-highest p-4 rounded-lg border-l-4 border-tertiary cursor-grab active:cursor-grabbing hover:bg-surface-variant transition-colors group" draggable="true">
+              <div 
+                className="glass-card rounded-xl p-4 min-h-[300px] flex flex-col gap-3 border-primary/40 ring-1 ring-primary/20 shadow-[0_0_20px_rgba(47,217,244,0.05)]"
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <div 
+                  className="bg-surface-container-highest p-4 rounded-lg border-l-4 border-tertiary cursor-grab active:cursor-grabbing hover:bg-surface-variant transition-colors group"
+                  draggable="true"
+                  onDragStart={handleDragStart}
+                  onDragEnd={handleDragEnd}
+                >
                   <div className="flex justify-between items-start mb-2">
                     <span className="bg-tertiary/10 text-tertiary text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">Fuerza</span>
                     <span className="material-symbols-outlined text-on-surface-variant text-sm opacity-0 group-hover:opacity-100 transition-opacity">drag_indicator</span>
@@ -246,7 +250,12 @@ function CalendarioSemanal() {
                 </div>
                 <button className="material-symbols-outlined text-outline hover:text-primary transition-colors">add_circle</button>
               </div>
-              <div className="glass-card rounded-xl p-4 min-h-[300px] flex flex-col gap-3 drag-target">
+              <div 
+                className="glass-card rounded-xl p-4 min-h-[300px] flex flex-col gap-3"
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
                 <div className="flex-grow flex items-center justify-center flex-col opacity-30">
                   <span className="material-symbols-outlined text-4xl mb-2">bedtime</span>
                   <span className="text-label-md">DÍA DE DESCANSO</span>
@@ -263,8 +272,18 @@ function CalendarioSemanal() {
                 </div>
                 <button className="material-symbols-outlined text-outline hover:text-primary transition-colors">add_circle</button>
               </div>
-              <div className="glass-card rounded-xl p-4 min-h-[300px] flex flex-col gap-3 drag-target">
-                <div className="bg-surface-container-highest p-4 rounded-lg border-l-4 border-secondary-container cursor-grab active:cursor-grabbing hover:bg-surface-variant transition-colors group" draggable="true">
+              <div 
+                className="glass-card rounded-xl p-4 min-h-[300px] flex flex-col gap-3"
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <div 
+                  className="bg-surface-container-highest p-4 rounded-lg border-l-4 border-secondary-container cursor-grab active:cursor-grabbing hover:bg-surface-variant transition-colors group"
+                  draggable="true"
+                  onDragStart={handleDragStart}
+                  onDragEnd={handleDragEnd}
+                >
                   <div className="flex justify-between items-start mb-2">
                     <span className="bg-secondary/10 text-secondary text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">Hipertrofia</span>
                     <span className="material-symbols-outlined text-on-surface-variant text-sm opacity-0 group-hover:opacity-100 transition-opacity">drag_indicator</span>
@@ -284,7 +303,12 @@ function CalendarioSemanal() {
                 </div>
                 <button className="material-symbols-outlined text-outline hover:text-primary transition-colors">add_circle</button>
               </div>
-              <div className="glass-card rounded-xl p-4 min-h-[300px] flex flex-col gap-3 drag-target"></div>
+              <div 
+                className="glass-card rounded-xl p-4 min-h-[300px] flex flex-col gap-3"
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              />
             </div>
 
             {/* Columna: Domingo */}
@@ -296,8 +320,18 @@ function CalendarioSemanal() {
                 </div>
                 <button className="material-symbols-outlined text-outline hover:text-primary transition-colors">add_circle</button>
               </div>
-              <div className="glass-card rounded-xl p-4 min-h-[300px] flex flex-col gap-3 drag-target">
-                <div className="bg-surface-container-highest p-4 rounded-lg border-l-4 border-primary cursor-grab active:cursor-grabbing hover:bg-surface-variant transition-colors group" draggable="true">
+              <div 
+                className="glass-card rounded-xl p-4 min-h-[300px] flex flex-col gap-3"
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <div 
+                  className="bg-surface-container-highest p-4 rounded-lg border-l-4 border-primary cursor-grab active:cursor-grabbing hover:bg-surface-variant transition-colors group"
+                  draggable="true"
+                  onDragStart={handleDragStart}
+                  onDragEnd={handleDragEnd}
+                >
                   <div className="flex justify-between items-start mb-2">
                     <span className="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">Aire Libre</span>
                     <span className="material-symbols-outlined text-on-surface-variant text-sm opacity-0 group-hover:opacity-100 transition-opacity">drag_indicator</span>
