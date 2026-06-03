@@ -1,8 +1,14 @@
-import { useState } from 'react';
-import { updatePerfil } from '../services/api';
+import { useState, useEffect } from 'react';
+import { getPerfil, updatePerfil } from '../services/api';
 
 function ConfigurarPerfil() {
   const [pasoActual, setPasoActual] = useState(1);
+  const totalPasos = 3;
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [cargandoPerfil, setCargandoPerfil] = useState(true); // ← NUEVO
+  
+  // Estado del formulario
   const [formData, setFormData] = useState({
     nombre: '',
     edad: '',
@@ -10,46 +16,144 @@ function ConfigurarPerfil() {
     altura: '',
     nivelActividad: 'ACTIVO'
   });
-  const [loading, setLoading] = useState(false);
-  const totalPasos = 3;
+
+  // Cargar perfil existente al montar el componente
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      // Si no hay token, redirigir al login
+      window.location.href = '/';
+      return;
+    }
+
+    getPerfil()
+      .then(resultado => {
+        if (resultado.success && resultado.data) {
+          const usuario = resultado.data;
+          setFormData({
+            nombre: usuario.nombre ?? '',
+            edad: usuario.edad != null ? String(usuario.edad) : '',
+            peso: usuario.peso != null ? String(usuario.peso) : '',
+            altura: usuario.altura != null ? String(usuario.altura) : '',
+            nivelActividad: usuario.nivelActividad ?? 'ACTIVO'
+          });
+        }
+      })
+      .catch(err => {
+        console.error('Error al cargar perfil:', err);
+        // Si hay error (ej: token expirado), no es bloqueante, seguimos con formulario vacío
+      })
+      .finally(() => {
+        setCargandoPerfil(false);
+      });
+  }, []);
+
+  // Mostrar pantalla de carga mientras se obtiene el perfil
+  if (cargandoPerfil) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-surface text-on-surface">
+        <p className="font-body-md">Cargando perfil...</p>
+      </div>
+    );
+  }
+
+  // Resto del componente igual...
+  // (las funciones handleChange, siguientePaso, volverPaso, terminarConfiguracion quedan igual)
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError(null); // Limpiar error al modificar
+  };
 
   const siguientePaso = () => {
-    setPasoActual(pasoActual + 1);
+    setError(null);
+    
+    // Validaciones según el paso
+    if (pasoActual === 1) {
+      if (!formData.nombre.trim()) {
+        setError('Ingresá tu nombre');
+        return;
+      }
+      const edad = parseInt(formData.edad, 10);
+      if (!formData.edad || !Number.isFinite(edad) || edad < 1 || edad > 120) {
+        setError('La edad debe ser un número entre 1 y 120');
+        return;
+      }
+      setPasoActual(2);
+    } 
+    else if (pasoActual === 2) {
+      const peso = parseFloat(formData.peso);
+      const altura = parseInt(formData.altura, 10);
+      
+      if (!formData.peso || !Number.isFinite(peso) || peso < 20 || peso > 300) {
+        setError('El peso debe estar entre 20 y 300 kg');
+        return;
+      }
+      if (!formData.altura || !Number.isFinite(altura) || altura < 50 || altura > 250) {
+        setError('La altura debe estar entre 50 y 250 cm');
+        return;
+      }
+      setPasoActual(3);
+    }
   };
 
   const volverPaso = () => {
+    setError(null);
     setPasoActual(pasoActual - 1);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
   const terminarConfiguracion = async () => {
+    setError(null);
+
+    // Validaciones finales
+    const edad = parseInt(formData.edad, 10);
+    const peso = parseFloat(formData.peso);
+    const altura = parseInt(formData.altura, 10);
+
+    if (!formData.nombre.trim()) {
+      setError('Ingresá tu nombre');
+      return;
+    }
+    if (!Number.isFinite(edad) || edad < 1 || edad > 120) {
+      setError('La edad debe ser un número entre 1 y 120');
+      return;
+    }
+    if (!Number.isFinite(peso) || peso < 20 || peso > 300) {
+      setError('El peso debe estar entre 20 y 300 kg');
+      return;
+    }
+    if (!Number.isFinite(altura) || altura < 50 || altura > 250) {
+      setError('La altura debe estar entre 50 y 250 cm');
+      return;
+    }
+    if (!['SEDENTARIO', 'ACTIVO', 'MUY_ACTIVO'].includes(formData.nivelActividad)) {
+      setError('Seleccioná un nivel de actividad válido');
+      return;
+    }
+
     setLoading(true);
     try {
       const resultado = await updatePerfil({
-        nombre: formData.nombre,
-        edad: parseInt(formData.edad),
-        peso: parseFloat(formData.peso),
-        altura: parseInt(formData.altura),
+        nombre: formData.nombre.trim(),
+        edad,
+        peso,
+        altura,
         nivelActividad: formData.nivelActividad
       });
-      
+
       if (resultado.success) {
         // Actualizar usuario en localStorage
         const usuarioActual = JSON.parse(localStorage.getItem('usuario') || '{}');
-        usuarioActual.nombre = formData.nombre;
+        usuarioActual.nombre = formData.nombre.trim();
         localStorage.setItem('usuario', JSON.stringify(usuarioActual));
         
-        alert('✅ Perfil configurado correctamente');
+        // Redirigir al calendario
         window.location.href = '/calendario';
       } else {
-        alert('❌ Error al guardar el perfil');
+        setError(resultado.message || 'Error al guardar el perfil');
       }
-    } catch (error) {
-      alert('❌ ' + error.message);
+    } catch (err) {
+      setError(err.message || 'Error de conexión con el servidor');
     } finally {
       setLoading(false);
     }
@@ -104,9 +208,9 @@ function ConfigurarPerfil() {
                     type="text"
                     name="nombre"
                     value={formData.nombre}
-                    onChange={handleInputChange}
+                    onChange={handleChange}
                     className="bg-surface border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container rounded-lg p-4 text-on-surface outline-none transition-all" 
-                    placeholder="Ej: Alex Rivera"
+                    placeholder="e.g. Alex Rivera"
                   />
                 </div>
                 <div className="flex flex-col gap-base">
@@ -115,18 +219,21 @@ function ConfigurarPerfil() {
                     type="number"
                     name="edad"
                     value={formData.edad}
-                    onChange={handleInputChange}
+                    onChange={handleChange}
                     className="bg-surface border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container rounded-lg p-4 text-on-surface outline-none transition-all" 
                     placeholder="25"
                   />
                 </div>
               </div>
               
+              {error && (
+                <p className="text-red-400 text-sm text-center">{error}</p>
+              )}
+              
               <div className="mt-stack-sm">
                 <button 
                   onClick={siguientePaso}
-                  disabled={!formData.nombre || !formData.edad}
-                  className="w-full py-4 bg-primary-container text-on-primary-container font-headline-md text-headline-md rounded-xl glow-cyan hover:glow-cyan-intense active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-4 bg-primary-container text-on-primary-container font-headline-md text-headline-md rounded-xl glow-cyan hover:glow-cyan-intense active:scale-95 transition-all"
                 >
                   Continuar
                 </button>
@@ -151,7 +258,8 @@ function ConfigurarPerfil() {
                     type="number"
                     name="peso"
                     value={formData.peso}
-                    onChange={handleInputChange}
+                    onChange={handleChange}
+                    step="0.1"
                     className="bg-surface border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container rounded-lg p-4 text-on-surface outline-none transition-all" 
                     placeholder="70"
                   />
@@ -162,18 +270,21 @@ function ConfigurarPerfil() {
                     type="number"
                     name="altura"
                     value={formData.altura}
-                    onChange={handleInputChange}
+                    onChange={handleChange}
                     className="bg-surface border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container rounded-lg p-4 text-on-surface outline-none transition-all" 
                     placeholder="175"
                   />
                 </div>
               </div>
               
+              {error && (
+                <p className="text-red-400 text-sm text-center">{error}</p>
+              )}
+              
               <div className="flex flex-col gap-stack-sm pt-stack-sm">
                 <button 
                   onClick={siguientePaso}
-                  disabled={!formData.peso || !formData.altura}
-                  className="w-full py-4 bg-primary-container text-on-primary-container font-headline-md text-headline-md rounded-xl glow-cyan hover:glow-cyan-intense active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-4 bg-primary-container text-on-primary-container font-headline-md text-headline-md rounded-xl glow-cyan hover:glow-cyan-intense active:scale-95 transition-all"
                 >
                   Siguiente Paso
                 </button>
@@ -198,13 +309,14 @@ function ConfigurarPerfil() {
               </div>
               
               <div className="flex flex-col gap-stack-sm">
+                {/* Sedentario */}
                 <label className="group cursor-pointer">
                   <input 
                     type="radio" 
                     name="nivelActividad" 
                     value="SEDENTARIO"
                     checked={formData.nivelActividad === 'SEDENTARIO'}
-                    onChange={handleInputChange}
+                    onChange={handleChange}
                     className="hidden peer" 
                   />
                   <div className="p-4 bg-surface border border-outline-variant rounded-xl flex items-center gap-4 transition-all peer-checked:border-primary-container peer-checked:bg-primary-container/10">
@@ -221,13 +333,14 @@ function ConfigurarPerfil() {
                   </div>
                 </label>
 
+                {/* Activo */}
                 <label className="group cursor-pointer">
                   <input 
                     type="radio" 
                     name="nivelActividad" 
                     value="ACTIVO"
                     checked={formData.nivelActividad === 'ACTIVO'}
-                    onChange={handleInputChange}
+                    onChange={handleChange}
                     className="hidden peer" 
                   />
                   <div className="p-4 bg-surface border border-outline-variant rounded-xl flex items-center gap-4 transition-all peer-checked:border-primary-container peer-checked:bg-primary-container/10">
@@ -244,13 +357,14 @@ function ConfigurarPerfil() {
                   </div>
                 </label>
 
+                {/* Muy Activo */}
                 <label className="group cursor-pointer">
                   <input 
                     type="radio" 
                     name="nivelActividad" 
                     value="MUY_ACTIVO"
                     checked={formData.nivelActividad === 'MUY_ACTIVO'}
-                    onChange={handleInputChange}
+                    onChange={handleChange}
                     className="hidden peer" 
                   />
                   <div className="p-4 bg-surface border border-outline-variant rounded-xl flex items-center gap-4 transition-all peer-checked:border-primary-container peer-checked:bg-primary-container/10">
@@ -268,13 +382,17 @@ function ConfigurarPerfil() {
                 </label>
               </div>
               
+              {error && (
+                <p className="text-red-400 text-sm text-center">{error}</p>
+              )}
+              
               <div className="flex flex-col gap-stack-sm pt-stack-sm">
                 <button 
                   onClick={terminarConfiguracion}
                   disabled={loading}
-                  className="w-full py-4 bg-primary-container text-on-primary-container font-headline-md text-headline-md rounded-xl glow-cyan hover:glow-cyan-intense active:scale-95 transition-all disabled:opacity-50"
+                  className="w-full py-4 bg-primary-container text-on-primary-container font-headline-md text-headline-md rounded-xl glow-cyan hover:glow-cyan-intense active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? 'Guardando...' : 'Terminar Configuración'}
+                  {loading ? 'Guardando...' : 'Terminar Etapa de Configuración'}
                 </button>
                 <button 
                   onClick={volverPaso}
