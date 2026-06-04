@@ -1,17 +1,17 @@
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '')
+  const isProduction = mode === 'production'
   
   return {
     plugins: [react()],
-    base: env.VITE_BASE_PATH ?? '/',
+    base: isProduction ? '/~ocho/' : '/',
     server: {
       port: 5173,
       proxy: {
         '/api': {
-          target: env.VITE_API_PROXY_TARGET ?? 'http://localhost:3000',
+          target: 'http://localhost:3000',
           changeOrigin: true
         }
       }
