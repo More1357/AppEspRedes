@@ -1,0 +1,5 @@
+9/6: 
+
+Se agregó el archivo de registro de modificaciones. 
+Se modifica el schema.prisma para agregar cuatro columnas a la tabla Usuario
+Se volvió a ejecutar npx prisma generate
