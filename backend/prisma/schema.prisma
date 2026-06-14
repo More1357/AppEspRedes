@@ -20,6 +20,7 @@ model Usuario {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   proyectos      Proyecto[]
+  rutinas        Rutina[]
 }
 
 model Proyecto {
@@ -29,4 +30,17 @@ model Proyecto {
   usuario   Usuario  @relation(fields: [usuarioId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Rutina {
+  id          Int      @id @default(autoincrement())
+  titulo      String
+  categoria   String   // "Hipertrofia", "Resistencia", "Fuerza", etc.
+  duracion    Int      // minutos
+  calorias    Int      // calorías estimadas
+  ejercicios  String?  // JSON con la lista de ejercicios (opcional)
+  usuarioId   Int
+  usuario     Usuario  @relation(fields: [usuarioId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
