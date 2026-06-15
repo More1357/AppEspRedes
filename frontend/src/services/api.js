@@ -3,12 +3,13 @@
 // URL base del API (configurable por entorno)
 const API_BASE_URL = import.meta.env.VITE_API_BASE ?? 'http://localhost:3000/api/v1';
 
-// Helper para manejar las respuestas (con manejo de 401)
-const handleResponse = async (response) => {
+// Helper para manejar las respuestas
+// hadToken: true si en esta request se envió un token
+const handleResponse = async (response, hadToken = false) => {
   const data = await response.json();
   
-  // Si el token expiró o es inválido
-  if (response.status === 401) {
+  // 401 solo es "sesión expirada" si habíamos enviado un token
+  if (response.status === 401 && hadToken) {
     // Limpiar sesión
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
@@ -26,6 +27,7 @@ const handleResponse = async (response) => {
 // Función auxiliar para agregar el token automáticamente
 const authFetch = async (url, options = {}) => {
   const token = localStorage.getItem('token');
+  const hadToken = !!token;  // Recordar si había token antes de la request
   
   const headers = {
     'Content-Type': 'application/json',
@@ -41,7 +43,7 @@ const authFetch = async (url, options = {}) => {
     headers,
   });
   
-  return handleResponse(response);
+  return handleResponse(response, hadToken);
 };
 
 // ========== ENDPOINTS ==========
@@ -49,7 +51,7 @@ const authFetch = async (url, options = {}) => {
 // Health check
 export const getHealth = async () => {
   const response = await fetch('/api/health');
-  return handleResponse(response);
+  return handleResponse(response, false);
 };
 
 // Login (no requiere token)
@@ -95,6 +97,62 @@ export const updatePerfil = async (data) => {
     method: 'PUT',
     body: JSON.stringify(data),
   });
+};
+
+// Agregar estas funciones al final del archivo, antes de exportar
+
+// Obtener todas las rutinas del usuario
+export const obtenerRutinas = async () => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_BASE_URL}/rutinas`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  return handleResponse(response);
+};
+
+// Crear una nueva rutina
+export const crearRutina = async (datos) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_BASE_URL}/rutinas`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(datos),
+  });
+  return handleResponse(response);
+};
+
+// Actualizar una rutina
+export const actualizarRutina = async (id, datos) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_BASE_URL}/rutinas/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(datos),
+  });
+  return handleResponse(response);
+};
+
+// Eliminar una rutina
+export const eliminarRutina = async (id) => {
+  const token = localStorage.getItem('token');
+  const response = await fetch(`${API_BASE_URL}/rutinas/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+  return handleResponse(response);
 };
 
 // Logout manual
