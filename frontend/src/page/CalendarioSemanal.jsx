@@ -1,5 +1,6 @@
 // Archivo: src/page/CalendarioSemanal.jsx
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { logout } from '../services/api';
 
 function CalendarioSemanal() {
   const [recordatoriosActivados, setRecordatoriosActivados] = useState(false);
@@ -9,7 +10,7 @@ function CalendarioSemanal() {
     console.log('Recordatorios:', !recordatoriosActivados ? 'Activados' : 'Desactivados');
   };
 
-  // Manejadores de arrastrar y soltar (sin useEffect, van directo en JSX)
+  // Manejadores de arrastrar y soltar
   const handleDragStart = (e) => {
     e.currentTarget.classList.add('opacity-40');
   };
@@ -30,7 +31,10 @@ function CalendarioSemanal() {
   const handleDrop = (e) => {
     e.preventDefault();
     e.currentTarget.classList.remove('bg-primary/5');
-    // La lógica de movimiento iría aquí
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -49,7 +53,13 @@ function CalendarioSemanal() {
           </div>
           <div className="flex items-center gap-4">
             <button className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all">notifications</button>
-            <button className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all">settings</button>
+            <button 
+              onClick={handleLogout}
+              className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all"
+              title="Cerrar sesión"
+            >
+              logout
+            </button>
             <div className="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden">
               <img 
                 className="w-full h-full object-cover" 
@@ -61,7 +71,7 @@ function CalendarioSemanal() {
         </div>
       </header>
 
-      {/* Barra lateral de navegación - CORREGIDO: hidden lg:flex sin flex suelto */}
+      {/* Barra lateral de navegación */}
       <aside className="fixed left-0 top-0 h-full w-64 z-50 flex-col pt-20 pb-8 bg-surface-container border-r border-outline-variant/30 hidden lg:flex">
         <div className="px-6 mb-8">
           <h2 className="font-headline-md text-headline-md text-primary">FitFlow Pro</h2>
@@ -103,10 +113,13 @@ function CalendarioSemanal() {
             <span className="material-symbols-outlined">help</span>
             <span className="font-label-md">Soporte</span>
           </a>
-          <a className="flex items-center gap-3 px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
-            <span className="material-symbols-outlined">settings</span>
-            <span className="font-label-md">Configuración</span>
-          </a>
+          <button 
+            onClick={handleLogout}
+            className="flex items-center gap-3 w-full px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group text-left"
+          >
+            <span className="material-symbols-outlined">logout</span>
+            <span className="font-label-md">Cerrar Sesión</span>
+          </button>
         </div>
       </aside>
 
@@ -343,7 +356,7 @@ function CalendarioSemanal() {
             </div>
           </div>
 
-          {/* Cuadrícula de acciones inferiores (Analítico/Contextual) */}
+          {/* Cuadrícula de acciones inferiores */}
           <div className="mt-stack-lg grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="glass-card p-6 rounded-xl flex items-center gap-6">
               <div className="w-16 h-16 rounded-full border-4 border-primary border-t-transparent animate-spin-slow"></div>
@@ -391,9 +404,12 @@ function CalendarioSemanal() {
           <span className="material-symbols-outlined">menu_book</span>
           <span className="text-[10px] font-bold">Librería</span>
         </button>
-        <button className="flex flex-col items-center gap-1 text-on-surface-variant">
-          <span className="material-symbols-outlined">person</span>
-          <span className="text-[10px] font-bold">Mi</span>
+        <button 
+          onClick={handleLogout}
+          className="flex flex-col items-center gap-1 text-on-surface-variant"
+        >
+          <span className="material-symbols-outlined">logout</span>
+          <span className="text-[10px] font-bold">Salir</span>
         </button>
       </nav>
       
