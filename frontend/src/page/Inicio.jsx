@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getHealth, login, register } from '../services/api';
 
 function Inicio() {
+  const navigate = useNavigate();
   const [metodoSeleccionado, setMetodoSeleccionado] = useState(null); // 'login' o 'registro'
   const [backendStatus, setBackendStatus] = useState(null);
   const [backendError, setBackendError] = useState(null);
@@ -12,7 +14,7 @@ function Inicio() {
   const [loading, setLoading] = useState(false);
 
   // Verificar que el backend esté funcionando al cargar el componente
-  useState(() => {
+  useEffect(() => {
     getHealth()
       .then((data) => setBackendStatus(data.status))
       .catch((err) => setBackendError(err.message));
@@ -36,11 +38,11 @@ function Inicio() {
       }
 
       if (resultado.success) {
-        // Redirigir según corresponda
+        // Redirigir según corresponda (sin recargar página)
         if (metodoSeleccionado === 'login') {
-          window.location.href = '/calendario';
+          navigate('/calendario');
         } else {
-          window.location.href = '/configurar-perfil';
+          navigate('/configurar-perfil');
         }
       } else {
         setError(resultado.message || 'Algo salió mal');
@@ -76,7 +78,7 @@ function Inicio() {
             {/* Título principal */}
             <div className="text-center mb-stack-md">
               <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
-                Bienvenido a la <span className="text-primary">Élite</span>
+                Bienvenido a la <span className="text-primary">FitFlow</span>
               </h1>
               <p className="font-body-md text-body-md text-on-surface-variant">
                 Elige tu camino para comenzar tu sesión.
