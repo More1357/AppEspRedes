@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getPerfil, updatePerfil } from '../services/api';
 
 function ConfigurarPerfil() {
+  const navigate = useNavigate();
   const [pasoActual, setPasoActual] = useState(1);
   const totalPasos = 3;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [cargandoPerfil, setCargandoPerfil] = useState(true); // ← NUEVO
+  const [cargandoPerfil, setCargandoPerfil] = useState(true);
   
   // Estado del formulario
   const [formData, setFormData] = useState({
@@ -21,8 +23,7 @@ function ConfigurarPerfil() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      // Si no hay token, redirigir al login
-      window.location.href = '/';
+      navigate('/');
       return;
     }
 
@@ -41,12 +42,11 @@ function ConfigurarPerfil() {
       })
       .catch(err => {
         console.error('Error al cargar perfil:', err);
-        // Si hay error (ej: token expirado), no es bloqueante, seguimos con formulario vacío
       })
       .finally(() => {
         setCargandoPerfil(false);
       });
-  }, []);
+  }, [navigate]);
 
   // Mostrar pantalla de carga mientras se obtiene el perfil
   if (cargandoPerfil) {
@@ -57,18 +57,14 @@ function ConfigurarPerfil() {
     );
   }
 
-  // Resto del componente igual...
-  // (las funciones handleChange, siguientePaso, volverPaso, terminarConfiguracion quedan igual)
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(null); // Limpiar error al modificar
+    setError(null);
   };
 
   const siguientePaso = () => {
     setError(null);
     
-    // Validaciones según el paso
     if (pasoActual === 1) {
       if (!formData.nombre.trim()) {
         setError('Ingresá tu nombre');
@@ -105,7 +101,6 @@ function ConfigurarPerfil() {
   const terminarConfiguracion = async () => {
     setError(null);
 
-    // Validaciones finales
     const edad = parseInt(formData.edad, 10);
     const peso = parseFloat(formData.peso);
     const altura = parseInt(formData.altura, 10);
@@ -142,13 +137,11 @@ function ConfigurarPerfil() {
       });
 
       if (resultado.success) {
-        // Actualizar usuario en localStorage
         const usuarioActual = JSON.parse(localStorage.getItem('usuario') || '{}');
         usuarioActual.nombre = formData.nombre.trim();
         localStorage.setItem('usuario', JSON.stringify(usuarioActual));
         
-        // Redirigir al calendario
-        window.location.href = '/calendario';
+        navigate('/calendario');
       } else {
         setError(resultado.message || 'Error al guardar el perfil');
       }
@@ -162,7 +155,6 @@ function ConfigurarPerfil() {
   return (
     <div className="bg-surface font-body-md text-on-surface overflow-x-hidden antialiased min-h-screen">
       
-      {/* Header - fijo arriba */}
       <header className="fixed top-0 left-0 w-full z-40 flex justify-between items-center px-gutter h-16 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20">
         <div className="font-headline-lg text-headline-lg font-extrabold text-primary">FitFlow</div>
         <div className="flex items-center gap-4"></div>
@@ -170,7 +162,6 @@ function ConfigurarPerfil() {
 
       <main className="min-h-screen pt-24 pb-12 flex flex-col items-center px-container-margin">
         
-        {/* Indicador de progreso */}
         <div className="w-full max-w-xl mb-stack-lg">
           <div className="flex justify-between mb-stack-sm">
             <span className="font-label-md text-label-md text-primary">
@@ -188,10 +179,8 @@ function ConfigurarPerfil() {
           </div>
         </div>
 
-        {/* Contenedor de pasos */}
         <div className="w-full max-w-xl relative min-h-[500px]">
           
-          {/* PASO 1: Datos personales */}
           {pasoActual === 1 && (
             <section className="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl p-stack-lg flex flex-col gap-stack-md">
               <div className="flex flex-col gap-base">
@@ -241,7 +230,6 @@ function ConfigurarPerfil() {
             </section>
           )}
 
-          {/* PASO 2: Métricas */}
           {pasoActual === 2 && (
             <section className="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl p-stack-lg flex flex-col gap-stack-md">
               <div className="flex flex-col gap-base">
@@ -298,7 +286,6 @@ function ConfigurarPerfil() {
             </section>
           )}
 
-          {/* PASO 3: Nivel de actividad */}
           {pasoActual === 3 && (
             <section className="w-full bg-surface-container-low border border-outline-variant/30 rounded-xl p-stack-lg flex flex-col gap-stack-md">
               <div className="flex flex-col gap-base">
@@ -309,7 +296,6 @@ function ConfigurarPerfil() {
               </div>
               
               <div className="flex flex-col gap-stack-sm">
-                {/* Sedentario */}
                 <label className="group cursor-pointer">
                   <input 
                     type="radio" 
@@ -333,7 +319,6 @@ function ConfigurarPerfil() {
                   </div>
                 </label>
 
-                {/* Activo */}
                 <label className="group cursor-pointer">
                   <input 
                     type="radio" 
@@ -357,7 +342,6 @@ function ConfigurarPerfil() {
                   </div>
                 </label>
 
-                {/* Muy Activo */}
                 <label className="group cursor-pointer">
                   <input 
                     type="radio" 
@@ -405,7 +389,6 @@ function ConfigurarPerfil() {
           )}
         </div>
 
-        {/* Elementos visuales de fondo */}
         <div className="fixed bottom-0 left-0 w-full h-1/3 pointer-events-none opacity-20 bg-gradient-to-t from-primary-container/20 to-transparent"></div>
         <div className="fixed top-20 right-[-100px] w-[300px] h-[300px] bg-primary-container/10 blur-[120px] rounded-full pointer-events-none"></div>
       </main>
