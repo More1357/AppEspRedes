@@ -1,5 +1,6 @@
 // Archivo: src/page/BibliotecaEjercicios.jsx
 import { useState, useEffect } from 'react';
+import { logout } from '../services/api';
 
 function BibliotecaEjercicios() {
   const [modalAbierto, setModalAbierto] = useState(false);
@@ -26,10 +27,13 @@ function BibliotecaEjercicios() {
     setModalAbierto(false);
   };
 
+  const handleLogout = () => {
+    logout();
+  };
+
   // Bloquear scroll del body mientras el modal está abierto
   useEffect(() => {
     if (!modalAbierto) return;
-
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = '';
@@ -92,10 +96,13 @@ function BibliotecaEjercicios() {
             <span className="material-symbols-outlined text-[18px]">help</span>
             <span className="font-label-md text-label-md">Soporte</span>
           </a>
-          <a className="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary transition-colors" href="#">
-            <span className="material-symbols-outlined text-[18px]">settings</span>
-            <span className="font-label-md text-label-md">Configuración</span>
-          </a>
+          <button 
+            onClick={handleLogout}
+            className="flex items-center gap-3 w-full px-4 py-2 text-on-surface-variant hover:text-primary transition-colors text-left"
+          >
+            <span className="material-symbols-outlined text-[18px]">logout</span>
+            <span className="font-label-md text-label-md">Cerrar Sesión</span>
+          </button>
         </div>
       </aside>
 
@@ -117,8 +124,12 @@ function BibliotecaEjercicios() {
             <button className="text-on-surface-variant hover:text-primary transition-colors">
               <span className="material-symbols-outlined">notifications</span>
             </button>
-            <button className="text-on-surface-variant hover:text-primary transition-colors">
-              <span className="material-symbols-outlined">settings</span>
+            <button 
+              onClick={handleLogout}
+              className="text-on-surface-variant hover:text-primary transition-colors"
+              title="Cerrar sesión"
+            >
+              <span className="material-symbols-outlined">logout</span>
             </button>
             <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/30">
               <img 
