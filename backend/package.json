@@ -1,10 +1,9 @@
 {
   "name": "mi-app-backend",
   "version": "1.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "node --watch server_1.js",
-    "start": "node server_1.js",
+    "dev": "node --watch dist/server.js",
+    "start": "node dist/server.js",
     "build": "tsc"
 },
   "dependencies": {

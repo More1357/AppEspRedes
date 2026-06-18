@@ -13,8 +13,8 @@ async function main() {
         await database_js_1.default.$connect();
         console.log('Conectado a la base de datos');
         // Iniciar servidor
-        app_js_1.default.listen(PORT, () => {
-            console.log(`Servidor corriendo en http://localhost:${PORT}`);
+        app_js_1.default.listen(PORT, '0.0.0.0', () => {
+            console.log(`Servidor corriendo en puerto ${PORT}`);
         });
     }
     catch (error) {

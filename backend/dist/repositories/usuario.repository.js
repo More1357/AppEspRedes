@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.usuarioRepository = void 0;
+// src/repositories/usuario.repository.js
 const database_js_1 = __importDefault(require("../config/database.js"));
 exports.usuarioRepository = {
     async findByEmail(email) {
@@ -17,9 +18,9 @@ exports.usuarioRepository = {
         });
     },
     async findById(id) {
+        // Sin include de proyectos (no se necesita en el perfil)
         return await database_js_1.default.usuario.findUnique({
-            where: { id },
-            include: { proyectos: true }
+            where: { id }
         });
     },
     async update(id, data) {
