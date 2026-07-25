@@ -1,11 +1,12 @@
 {
   "name": "mi-app-backend",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "dev": "node --watch dist/server.js",
     "start": "node dist/server.js",
     "build": "tsc"
-},
+  },
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "bcrypt": "^5.1.1",
