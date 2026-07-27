@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import Inicio from './page/Inicio';
 import CalendarioSemanal from './page/CalendarioSemanal';
 import BibliotecaEjercicios from './page/BibliotecaEjercicios';
@@ -8,7 +8,7 @@ import ConstructorRutinas from './page/ConstructorRutinas';  // ← NUEVO
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Inicio />} />
         <Route path="/calendario" element={<CalendarioSemanal />} />
@@ -16,8 +16,9 @@ function App() {
         <Route path="/mis-rutinas" element={<MisRutinas />} />
         <Route path="/configurar-perfil" element={<ConfigurarPerfil />} />
         <Route path="/constructor-rutinas" element={<ConstructorRutinas />} />  {/* ← NUEVO */}
+        <Route path="*" element={<Inicio />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

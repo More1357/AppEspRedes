@@ -2,6 +2,11 @@
 
 // URL base del API (configurable por entorno)
 const API_BASE_URL = import.meta.env.VITE_API_BASE ?? 'http://localhost:3000/api/v1';
+const APP_BASE_URL = import.meta.env.BASE_URL ?? '/';
+
+const redirectToAppRoot = () => {
+  window.location.href = APP_BASE_URL;
+};
 
 // Helper para manejar las respuestas
 // hadToken: true si en esta request se envió un token
@@ -14,7 +19,7 @@ const handleResponse = async (response, hadToken = false) => {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
     // Redirigir al login
-    window.location.href = '/';
+    redirectToAppRoot();
     throw new Error('Sesión expirada. Por favor, iniciá sesión nuevamente.');
   }
   
@@ -159,5 +164,5 @@ export const eliminarRutina = async (id) => {
 export const logout = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('usuario');
-  window.location.href = '/';
+  redirectToAppRoot();
 };
