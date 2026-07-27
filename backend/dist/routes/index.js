@@ -1,14 +1,9 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const index_js_1 = __importDefault(require("./v1/index.js"));
-const router = (0, express_1.Router)();
-router.use('/v1', index_js_1.default);
+import { Router } from 'express';
+import v1Routes from './v1/index.js';
+const router = Router();
+router.use('/v1', v1Routes);
 // Health check
 router.get('/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date() });
 });
-exports.default = router;
+export default router;

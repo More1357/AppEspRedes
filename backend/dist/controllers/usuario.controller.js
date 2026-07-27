@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.usuarioController = void 0;
-const usuario_repository_js_1 = require("../repositories/usuario.repository.js");
-exports.usuarioController = {
+import { usuarioRepository } from '../repositories/usuario.repository.js';
+export const usuarioController = {
     async getPerfil(req, res, next) {
         try {
-            const usuario = await usuario_repository_js_1.usuarioRepository.findById(req.user.id);
+            const usuario = await usuarioRepository.findById(req.user.id);
             if (!usuario) {
                 throw new Error('Usuario no encontrado');
             }
@@ -22,7 +19,7 @@ exports.usuarioController = {
     async updatePerfil(req, res, next) {
         try {
             const { nombre, edad, peso, altura, nivelActividad } = req.body;
-            const usuario = await usuario_repository_js_1.usuarioRepository.update(req.user.id, {
+            const usuario = await usuarioRepository.update(req.user.id, {
                 nombre,
                 edad,
                 peso,

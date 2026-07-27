@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.rutinaController = void 0;
-const rutina_repository_js_1 = require("../repositories/rutina.repository.js");
-exports.rutinaController = {
+import { rutinaRepository } from '../repositories/rutina.repository.js';
+export const rutinaController = {
     // Obtener todas las rutinas del usuario
     async getMisRutinas(req, res, next) {
         try {
-            const rutinas = await rutina_repository_js_1.rutinaRepository.findByUsuarioId(req.user.id);
+            const rutinas = await rutinaRepository.findByUsuarioId(req.user.id);
             res.json({
                 success: true,
                 data: rutinas
@@ -20,7 +17,7 @@ exports.rutinaController = {
     async createRutina(req, res, next) {
         try {
             const { titulo, categoria, duracion, calorias, ejercicios } = req.body;
-            const rutina = await rutina_repository_js_1.rutinaRepository.create({
+            const rutina = await rutinaRepository.create({
                 titulo,
                 categoria,
                 duracion: parseInt(duracion),
@@ -43,7 +40,7 @@ exports.rutinaController = {
         try {
             const { id } = req.params;
             const { titulo, categoria, duracion, calorias, ejercicios } = req.body;
-            const rutina = await rutina_repository_js_1.rutinaRepository.update(parseInt(id), {
+            const rutina = await rutinaRepository.update(parseInt(id), {
                 titulo,
                 categoria,
                 duracion: duracion ? parseInt(duracion) : undefined,
@@ -64,7 +61,7 @@ exports.rutinaController = {
     async deleteRutina(req, res, next) {
         try {
             const { id } = req.params;
-            await rutina_repository_js_1.rutinaRepository.delete(parseInt(id));
+            await rutinaRepository.delete(parseInt(id));
             res.json({
                 success: true,
                 message: 'Rutina eliminada correctamente'

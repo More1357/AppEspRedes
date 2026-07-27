@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.authController = void 0;
-const auth_services_js_1 = require("../services/auth.services.js");
-exports.authController = {
+import { authService } from '../services/auth.services.js';
+export const authController = {
     async login(req, res, next) {
         try {
             const { email, password } = req.body;
-            const resultado = await auth_services_js_1.authService.login(email, password);
+            const resultado = await authService.login(email, password);
             res.json({
                 success: true,
                 data: resultado,
@@ -20,7 +17,7 @@ exports.authController = {
     async register(req, res, next) {
         try {
             const { email, password, nombre } = req.body;
-            const resultado = await auth_services_js_1.authService.register({ email, password, nombre });
+            const resultado = await authService.register({ email, password, nombre });
             res.status(201).json({
                 success: true,
                 data: resultado,

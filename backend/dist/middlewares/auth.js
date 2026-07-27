@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.authMiddleware = void 0;
-const jwt_js_1 = require("../utils/jwt.js");
-exports.authMiddleware = {
+import { verifyToken } from '../utils/jwt.js';
+export const authMiddleware = {
     verifyToken(req, res, next) {
         const authHeader = req.headers.authorization;
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -13,7 +10,7 @@ exports.authMiddleware = {
         }
         const token = authHeader.split(' ')[1];
         try {
-            const decoded = (0, jwt_js_1.verifyToken)(token);
+            const decoded = verifyToken(token);
             req.user = decoded;
             next();
         }

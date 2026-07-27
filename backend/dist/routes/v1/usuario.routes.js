@@ -1,10 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const usuario_controller_js_1 = require("../../controllers/usuario.controller.js");
-const auth_js_1 = require("../../middlewares/auth.js");
-const router = (0, express_1.Router)();
-router.use(auth_js_1.authMiddleware.verifyToken);
-router.get('/perfil', usuario_controller_js_1.usuarioController.getPerfil);
-router.put('/perfil', usuario_controller_js_1.usuarioController.updatePerfil);
-exports.default = router;
+import { Router } from 'express';
+import { usuarioController } from '../../controllers/usuario.controller.js';
+import { authMiddleware } from '../../middlewares/auth.js';
+const router = Router();
+router.use(authMiddleware.verifyToken);
+router.get('/perfil', usuarioController.getPerfil);
+router.put('/perfil', usuarioController.updatePerfil);
+export default router;

@@ -1,20 +1,12 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyToken = exports.generarToken = void 0;
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+import jwt from 'jsonwebtoken';
 const SECRET = process.env.JWT_SECRET;
 if (!SECRET) {
     console.error('Error: JWT_SECRET no está definido en las variables de entorno');
     process.exit(1);
 }
-const generarToken = (payload) => {
-    return jsonwebtoken_1.default.sign(payload, SECRET, { expiresIn: '7d' });
+export const generarToken = (payload) => {
+    return jwt.sign(payload, SECRET, { expiresIn: '7d' });
 };
-exports.generarToken = generarToken;
-const verifyToken = (token) => {
-    return jsonwebtoken_1.default.verify(token, SECRET);
+export const verifyToken = (token) => {
+    return jwt.verify(token, SECRET);
 };
-exports.verifyToken = verifyToken;

@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.notFoundHandler = exports.errorHandler = void 0;
-const errorHandler = (err, req, res, next) => {
+export const errorHandler = (err, req, res, next) => {
     console.error(`[ERROR] ${err.message}`);
     if (err.stack)
         console.error(err.stack);
@@ -85,12 +82,10 @@ const errorHandler = (err, req, res, next) => {
         message: 'Error interno del servidor'
     });
 };
-exports.errorHandler = errorHandler;
 // Middleware específico para rutas no encontradas
-const notFoundHandler = (req, res, next) => {
+export const notFoundHandler = (req, res, next) => {
     res.status(404).json({
         success: false,
         message: `Ruta no encontrada: ${req.method} ${req.originalUrl}`
     });
 };
-exports.notFoundHandler = notFoundHandler;
