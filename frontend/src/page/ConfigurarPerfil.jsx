@@ -137,11 +137,19 @@ function ConfigurarPerfil() {
       });
 
       if (resultado.success) {
+        // ✅ Guardamos los datos actualizados en localStorage
         const usuarioActual = JSON.parse(localStorage.getItem('usuario') || '{}');
         usuarioActual.nombre = formData.nombre.trim();
+        usuarioActual.edad = edad;
+        usuarioActual.peso = peso;
+        usuarioActual.altura = altura;
+        usuarioActual.nivelActividad = formData.nivelActividad;
         localStorage.setItem('usuario', JSON.stringify(usuarioActual));
-        
-        navigate('/calendario');
+
+        // ✅ Disparamos un evento para que el Sidebar se actualice AL INSTANTE
+        window.dispatchEvent(new CustomEvent('datosPerfilActualizados'));
+
+        navigate('/panel');
       } else {
         setError(resultado.message || 'Error al guardar el perfil');
       }

@@ -1,8 +1,13 @@
 // Archivo: src/page/CalendarioSemanal.jsx
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { logout } from '../services/api';
+import Sidebar from '../components/Sidebar';
+import Header from '../components/Header';
 
 function CalendarioSemanal() {
+  const navigate = useNavigate();
+
   const [recordatoriosActivados, setRecordatoriosActivados] = useState(false);
   
   const alternarRecordatorios = () => {
@@ -10,7 +15,6 @@ function CalendarioSemanal() {
     console.log('Recordatorios:', !recordatoriosActivados ? 'Activados' : 'Desactivados');
   };
 
-  // Manejadores de arrastrar y soltar
   const handleDragStart = (e) => {
     e.currentTarget.classList.add('opacity-40');
   };
@@ -35,95 +39,15 @@ function CalendarioSemanal() {
 
   const handleLogout = () => {
     logout();
+    navigate('/');
   };
 
   return (
     <div className="bg-background text-on-surface font-body-md selection:bg-primary selection:text-on-primary min-h-screen">
       
-      {/* Barra de navegación superior */}
-      <header className="fixed top-0 left-0 w-full z-40 flex justify-between items-center px-gutter h-16 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20">
-        <div className="flex items-center gap-4">
-          <span className="font-headline-lg text-headline-lg font-extrabold text-primary">FitFlow</span>
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="hidden md:flex gap-6 items-center">
-            <a className="text-on-surface-variant font-medium hover:text-primary transition-colors" href="#">Resumen</a>
-            <a className="text-primary font-bold border-b-2 border-primary pb-1" href="#">Calendario de Entrenamiento</a>
-            <a className="text-on-surface-variant font-medium hover:text-primary transition-colors" href="#">Comunidad</a>
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all">notifications</button>
-            <button 
-              onClick={handleLogout}
-              className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all"
-              title="Cerrar sesión"
-            >
-              logout
-            </button>
-            <div className="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden">
-              <img 
-                className="w-full h-full object-cover" 
-                alt="Perfil de usuario" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAF3KB3-0N-iax1npRi8GOYzZybUB001LrSoSAZ8Hhx_qXkeMT99at4fuA3WV5H8ohKV711cIhFc8Y7JF-eLFDD-CAS7gKg6ETlk2Wh4Bp-juIZqCrjC_qVkJCbd1gZgdBbXOL8GgAAnIYRg6RX1_tbgrhctbGyiLa04NRRwaAujOZqIIhud1mGNq1bqsh99SsvLS5qDX9IU62Bx7GTWWEuT-eq3edBdXTz2ZhzdhXlz4k7VwBMaYrkqJIduPfd8hOR5ExlHmxOsTE"
-              />
-            </div>
-          </div>
-        </div>
-      </header>
+      <Sidebar />
+      <Header />
 
-      {/* Barra lateral de navegación */}
-      <aside className="fixed left-0 top-0 h-full w-64 z-50 flex-col pt-20 pb-8 bg-surface-container border-r border-outline-variant/30 hidden lg:flex">
-        <div className="px-6 mb-8">
-          <h2 className="font-headline-md text-headline-md text-primary">FitFlow Pro</h2>
-          <p className="text-on-surface-variant text-label-md">Rendimiento Élite</p>
-        </div>
-        <nav className="flex-grow space-y-2 px-3">
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
-            <span className="material-symbols-outlined">dashboard</span>
-            <span className="font-label-md">Panel</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
-            <span className="material-symbols-outlined">fitness_center</span>
-            <span className="font-label-md">Constructor de Rutinas</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
-            <span className="material-symbols-outlined">timer</span>
-            <span className="font-label-md">Sesión Activa</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
-            <span className="material-symbols-outlined">menu_book</span>
-            <span className="font-label-md">Biblioteca de Ejercicios</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border-r-4 border-primary transition-all group" href="#">
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>calendar_month</span>
-            <span className="font-label-md">Calendario de Entrenamiento</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
-            <span className="material-symbols-outlined">folder_special</span>
-            <span className="font-label-md">Mis Rutinas</span>
-          </a>
-        </nav>
-        <div className="px-6 mb-8">
-          <button className="w-full bg-primary text-on-primary py-3 rounded-xl font-bold custom-glow transition-all active:scale-95">
-            Comenzar Entrenamiento
-          </button>
-        </div>
-        <div className="px-3 border-t border-outline-variant/20 pt-4 space-y-2">
-          <a className="flex items-center gap-3 px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group" href="#">
-            <span className="material-symbols-outlined">help</span>
-            <span className="font-label-md">Soporte</span>
-          </a>
-          <button 
-            onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all group text-left"
-          >
-            <span className="material-symbols-outlined">logout</span>
-            <span className="font-label-md">Cerrar Sesión</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* Contenido principal */}
       <main className="lg:ml-64 pt-24 px-gutter pb-stack-lg min-h-screen">
         <div className="max-w-7xl mx-auto">
           

@@ -1,8 +1,13 @@
 // Archivo: src/page/MisRutinas.jsx
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { logout, obtenerRutinas } from '../services/api';
+import Sidebar from '../components/Sidebar';
+import Header from '../components/Header';
 
 function MisRutinas() {
+  const navigate = useNavigate();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [rutinas, setRutinas] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -10,13 +15,14 @@ function MisRutinas() {
 
   const handleLogout = () => {
     logout();
+    navigate('/');
   };
 
   // Cargar rutinas al montar el componente
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      window.location.href = '/';
+      navigate('/');
       return;
     }
 
@@ -35,7 +41,7 @@ function MisRutinas() {
       .finally(() => {
         setCargando(false);
       });
-  }, []);
+  }, [navigate]);
 
   // Filtrar rutinas por búsqueda
   const rutinasFiltradas = rutinas.filter(rutina =>
@@ -54,95 +60,9 @@ function MisRutinas() {
   return (
     <div className="bg-background text-on-surface font-body-md min-h-screen">
       
-      {/* Barra superior */}
-      <header className="fixed top-0 left-0 w-full z-40 flex justify-between items-center px-gutter h-16 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20">
-        <div className="flex items-center gap-4">
-          <span className="font-headline-lg text-headline-lg font-extrabold text-primary">FitFlow</span>
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="hidden md:flex items-center bg-surface-container-highest/50 rounded-full px-4 py-1.5 border border-outline-variant/30 transition-all duration-200 focus-within:border-primary/50 focus-within:bg-surface-container-highest/80">
-            <span className="material-symbols-outlined text-on-surface-variant mr-2" style={{ fontSize: '20px' }}>search</span>
-            <input 
-              className="bg-transparent border-none focus:ring-0 text-body-md text-on-surface w-48 placeholder:text-on-surface-variant outline-none" 
-              placeholder="Buscar rutinas..." 
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">notifications</button>
-            <button 
-              onClick={handleLogout}
-              className="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors"
-              title="Cerrar sesión"
-            >
-              logout
-            </button>
-            <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/30">
-              <img 
-                alt="Perfil de usuario" 
-                className="w-full h-full object-cover" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCOCuZsU54A6YJr70rz4TAjFpeBgFx9pXmRc1gHEpb32LCyOnH_1huBRqxw52Ja6OBljDo66eoBEeHbSMV7rAXVDAoufeJVSUMkbuBDviIYEAoK1ufhfwel-EJ_c6fTqQT0-EEs0JJSJ39ywIjcBkle7HzCJu1NxerkN5G0vCJae_Fg5N0h1nBd-Mxc2rcTIcKTrRJU6D4C2e3VmAIj5dkk6SJ1pefGAk75UPFM5EdNPHlIZnila5a9RWBfDZo2qq89miL8XfAmhA"
-              />
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
+      <Sidebar />
 
-      {/* Barra lateral */}
-      <aside className="fixed left-0 top-0 h-full w-64 z-50 flex-col pt-20 pb-8 bg-surface-container border-r border-outline-variant/30 hidden md:flex">
-        <div className="px-6 mb-8">
-          <h2 className="font-headline-md text-headline-md text-primary">FitFlow Pro</h2>
-          <p className="text-label-md font-label-md text-on-surface-variant">Rendimiento Élite</p>
-        </div>
-        <nav className="flex-1 px-4 space-y-2">
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" href="#">
-            <span className="material-symbols-outlined">dashboard</span>
-            <span className="font-label-md">Panel</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" href="#">
-            <span className="material-symbols-outlined">fitness_center</span>
-            <span className="font-label-md">Constructor de Rutinas</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" href="#">
-            <span className="material-symbols-outlined">timer</span>
-            <span className="font-label-md">Sesión Activa</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" href="#">
-            <span className="material-symbols-outlined">menu_book</span>
-            <span className="font-label-md">Biblioteca de Ejercicios</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" href="#">
-            <span className="material-symbols-outlined">calendar_month</span>
-            <span className="font-label-md">Calendario de Entrenamiento</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border-r-4 border-primary transition-all scale-[0.98]" href="#">
-            <span className="material-symbols-outlined">folder_special</span>
-            <span className="font-label-md">Mis Rutinas</span>
-          </a>
-        </nav>
-        <div className="px-4 mb-6">
-          <button className="w-full py-4 bg-primary text-on-primary font-headline-md rounded-xl glow-primary hover:opacity-90 active:scale-95 transition-all">
-            Comenzar Entrenamiento
-          </button>
-        </div>
-        <div className="px-4 pt-4 border-t border-outline-variant/20 space-y-2">
-          <a className="flex items-center gap-3 px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all" href="#">
-            <span className="material-symbols-outlined">help</span>
-            <span className="font-label-md">Soporte</span>
-          </a>
-          <button 
-            onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-2 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all text-left"
-          >
-            <span className="material-symbols-outlined">logout</span>
-            <span className="font-label-md">Cerrar Sesión</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* Contenido principal */}
       <main className="md:ml-64 pt-24 px-6 pb-24 min-h-screen">
         <div className="max-w-7xl mx-auto">
           

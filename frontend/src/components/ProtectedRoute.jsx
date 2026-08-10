@@ -30,12 +30,13 @@ function ProtectedRoute({ children }) {
       setValido(true);
     }
     setVerificando(false);
-  }, []);
+  }, []); // ✅ Se ejecuta UNA SOLA VEZ al montar el componente
 
   if (verificando) {
     return <div className="min-h-screen flex items-center justify-center">Verificando sesión...</div>;
   }
 
+  // ✅ Usamos "/" porque en App.jsx tenés HashRouter, la raíz real es "/"
   return valido ? children : <Navigate to="/" replace />;
 }
 

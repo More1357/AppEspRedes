@@ -40,7 +40,7 @@ function Inicio() {
       if (resultado.success) {
         // Redirigir según corresponda (sin recargar página)
         if (metodoSeleccionado === 'login') {
-          navigate('/calendario');
+          navigate('/panel');
         } else {
           navigate('/configurar-perfil');
         }

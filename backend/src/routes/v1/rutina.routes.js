@@ -1,3 +1,4 @@
+// src/routes/v1/rutina.routes.js
 import { Router } from 'express';
 import { rutinaController } from '../../controllers/rutina.controller.js';
 import { authMiddleware } from '../../middlewares/auth.js';

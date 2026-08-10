@@ -1,3 +1,4 @@
+// src/repositories/rutina.repository.js
 import prisma from '../config/database.js';
 
 export const rutinaRepository = {
@@ -6,6 +7,13 @@ export const rutinaRepository = {
     return await prisma.rutina.findMany({
       where: { usuarioId },
       orderBy: { createdAt: 'desc' }
+    });
+  },
+
+  // ✅ NUEVO: Buscar una rutina por ID (para verificar existencia)
+  async findById(id) {
+    return await prisma.rutina.findUnique({
+      where: { id }
     });
   },
 

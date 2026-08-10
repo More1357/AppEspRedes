@@ -1,10 +1,13 @@
-import { rutinaRepository } from '../repositories/rutina.repository.js';
+// src/controllers/rutina.controller.js
+import { rutinaService } from '../services/rutina.service.js';
 
 export const rutinaController = {
   // Obtener todas las rutinas del usuario
   async getMisRutinas(req, res, next) {
     try {
-      const rutinas = await rutinaRepository.findByUsuarioId(req.user.id);
+      const usuarioId = req.user.id;
+      const rutinas = await rutinaService.obtenerMisRutinas(usuarioId);
+      
       res.json({
         success: true,
         data: rutinas
@@ -17,15 +20,17 @@ export const rutinaController = {
   // Crear una nueva rutina
   async createRutina(req, res, next) {
     try {
+      const usuarioId = req.user.id;
       const { titulo, categoria, duracion, calorias, ejercicios } = req.body;
-      const rutina = await rutinaRepository.create({
+      
+      const rutina = await rutinaService.crearRutina(usuarioId, {
         titulo,
         categoria,
         duracion: parseInt(duracion),
         calorias: parseInt(calorias),
-        ejercicios: ejercicios ? JSON.stringify(ejercicios) : null,
-        usuarioId: req.user.id
+        ejercicios: ejercicios ? JSON.stringify(ejercicios) : null
       });
+      
       res.status(201).json({
         success: true,
         data: rutina,
@@ -39,15 +44,18 @@ export const rutinaController = {
   // Actualizar una rutina
   async updateRutina(req, res, next) {
     try {
-      const { id } = req.params;
+      const usuarioId = req.user.id;
+      const id = parseInt(req.params.id, 10);
       const { titulo, categoria, duracion, calorias, ejercicios } = req.body;
-      const rutina = await rutinaRepository.update(parseInt(id), {
+      
+      const rutina = await rutinaService.actualizarRutina(id, usuarioId, {
         titulo,
         categoria,
         duracion: duracion ? parseInt(duracion) : undefined,
         calorias: calorias ? parseInt(calorias) : undefined,
         ejercicios: ejercicios ? JSON.stringify(ejercicios) : undefined
       });
+      
       res.json({
         success: true,
         data: rutina,
@@ -58,11 +66,14 @@ export const rutinaController = {
     }
   },
 
-  // Eliminar una rutina
+  // Eliminar una rutina (YA CON SEGURIDAD)
   async deleteRutina(req, res, next) {
     try {
-      const { id } = req.params;
-      await rutinaRepository.delete(parseInt(id));
+      const usuarioId = req.user.id;
+      const id = parseInt(req.params.id, 10);
+      
+      await rutinaService.eliminarRutina(id, usuarioId);
+      
       res.json({
         success: true,
         message: 'Rutina eliminada correctamente'

@@ -1,8 +1,13 @@
 // Archivo: src/page/BibliotecaEjercicios.jsx
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { logout } from '../services/api';
+import Sidebar from '../components/Sidebar';
+import Header from '../components/Header';
 
 function BibliotecaEjercicios() {
+  const navigate = useNavigate();
+
   const [modalAbierto, setModalAbierto] = useState(false);
   const [ejercicioSeleccionado, setEjercicioSeleccionado] = useState({
     titulo: '',
@@ -29,9 +34,9 @@ function BibliotecaEjercicios() {
 
   const handleLogout = () => {
     logout();
+    navigate('/');
   };
 
-  // Bloquear scroll del body mientras el modal está abierto
   useEffect(() => {
     if (!modalAbierto) return;
     document.body.style.overflow = 'hidden';
@@ -40,7 +45,6 @@ function BibliotecaEjercicios() {
     };
   }, [modalAbierto]);
 
-  // Cerrar modal con tecla ESC
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === 'Escape' && modalAbierto) {
@@ -54,98 +58,11 @@ function BibliotecaEjercicios() {
   return (
     <div className="bg-background text-on-surface font-body-md selection:bg-primary selection:text-on-primary-fixed overflow-hidden h-screen flex">
       
-      {/* Barra lateral de navegación */}
-      <aside className="fixed left-0 top-0 h-full w-64 z-50 flex flex-col pt-20 pb-8 bg-surface-container border-r border-outline-variant/30">
-        <div className="px-6 mb-10">
-          <h1 className="font-headline-md text-headline-md text-primary tracking-tight">FitFlow Pro</h1>
-          <p className="text-label-md font-label-md text-on-surface-variant opacity-70">Rendimiento Élite</p>
-        </div>
-        <nav className="flex-1 px-4 space-y-2 overflow-y-auto custom-scrollbar">
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200 group" href="#">
-            <span className="material-symbols-outlined text-[20px]">dashboard</span>
-            <span className="font-label-md text-label-md">Panel</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" href="#">
-            <span className="material-symbols-outlined text-[20px]">fitness_center</span>
-            <span className="font-label-md text-label-md">Constructor de Rutinas</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" href="#">
-            <span className="material-symbols-outlined text-[20px]">timer</span>
-            <span className="font-label-md text-label-md">Sesión Activa</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/10 text-primary border-r-4 border-primary transition-all duration-200 scale-[0.98]" href="#">
-            <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>menu_book</span>
-            <span className="font-label-md text-label-md">Biblioteca de Ejercicios</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" href="#">
-            <span className="material-symbols-outlined text-[20px]">calendar_month</span>
-            <span className="font-label-md text-label-md">Calendario de Entrenamiento</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/50 transition-all duration-200" href="#">
-            <span className="material-symbols-outlined text-[20px]">folder_special</span>
-            <span className="font-label-md text-label-md">Mis Rutinas</span>
-          </a>
-        </nav>
-        <div className="px-6 mt-auto">
-          <button className="w-full bg-primary text-on-primary-fixed font-bold py-3 rounded-xl hover:opacity-90 transition-all active:scale-95 shadow-[0_0_20px_rgba(138,235,255,0.2)]">
-            Comenzar Entrenamiento
-          </button>
-        </div>
-        <div className="px-4 mt-8 space-y-1">
-          <a className="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary transition-colors" href="#">
-            <span className="material-symbols-outlined text-[18px]">help</span>
-            <span className="font-label-md text-label-md">Soporte</span>
-          </a>
-          <button 
-            onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-2 text-on-surface-variant hover:text-primary transition-colors text-left"
-          >
-            <span className="material-symbols-outlined text-[18px]">logout</span>
-            <span className="font-label-md text-label-md">Cerrar Sesión</span>
-          </button>
-        </div>
-      </aside>
+      <Sidebar />
+      <Header />
 
-      {/* Barra superior */}
-      <header className="fixed top-0 left-0 w-full z-40 h-16 flex justify-between items-center px-gutter bg-surface/80 backdrop-blur-xl border-b border-outline-variant/20 ml-0 md:pl-72">
-        <div className="flex items-center">
-          <span className="font-headline-lg text-headline-lg font-extrabold text-primary">FitFlow</span>
-        </div>
-        <div className="flex items-center gap-6">
-          <div className="relative group hidden sm:block">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">search</span>
-            <input 
-              className="bg-surface-container-low border border-outline-variant/50 rounded-full py-1.5 pl-10 pr-4 text-sm w-64 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" 
-              placeholder="Buscar ejercicios..." 
-              type="text"
-            />
-          </div>
-          <div className="flex items-center gap-4">
-            <button className="text-on-surface-variant hover:text-primary transition-colors">
-              <span className="material-symbols-outlined">notifications</span>
-            </button>
-            <button 
-              onClick={handleLogout}
-              className="text-on-surface-variant hover:text-primary transition-colors"
-              title="Cerrar sesión"
-            >
-              <span className="material-symbols-outlined">logout</span>
-            </button>
-            <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/30">
-              <img 
-                alt="Perfil de usuario" 
-                className="w-full h-full object-cover" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDq20rvr9RKkp46BSq-viV7eZ9peNDnktN82Az8DLaIPvxWb6C8lVeGAvNQ4-uZlBofemmyt6pap9fDlnKvs3kdlaXNugJ928osMI9Wa1-Mk1SpPRTXrTVPvGExrnUzbcm4WA0a2ZB-YlSXCV9zgvgoS9PuCF2BnJpte8FEMbdCL0FWXYpOmGFc1_QhMShKqcDZ7ILbyo_IdjQ9Ol3CAxBPtcc0nts86hcN97aVYuDQr7Zl3h2O9-DHgB0mHgyfdm5mjEOGL9zLI3c"
-              />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Contenido principal */}
       <main className="flex-1 ml-64 pt-16 flex flex-col h-screen">
         
-        {/* Encabezado y área de filtros */}
         <section className="px-gutter pt-8 pb-4">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
             <div>
@@ -164,7 +81,6 @@ function BibliotecaEjercicios() {
             </div>
           </div>
 
-          {/* Filtros por grupo muscular */}
           <div className="flex items-center gap-3 overflow-x-auto pb-4 custom-scrollbar">
             <button className="px-6 py-2 rounded-full bg-primary text-on-primary-fixed font-bold text-label-md whitespace-nowrap active-pill transition-all">Todo el Cuerpo</button>
             <button className="px-6 py-2 rounded-full bg-surface-container-high border border-outline-variant/30 text-on-surface-variant font-medium text-label-md whitespace-nowrap hover:border-primary transition-all">Pecho</button>
@@ -177,7 +93,6 @@ function BibliotecaEjercicios() {
           </div>
         </section>
 
-        {/* Cuadrícula de ejercicios */}
         <section className="flex-1 overflow-y-auto px-gutter pb-stack-lg custom-scrollbar">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
             
