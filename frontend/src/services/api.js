@@ -1,8 +1,5 @@
-// src/services/api.js
-
-// URL base del API (configurable por entorno)
-const API_BASE_URL = import.meta.env.VITE_API_BASE ?? 'http://localhost:3000/api/v1';
-const APP_BASE_URL = import.meta.env.BASE_URL ?? '/';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE ?? 'http://localhost:3000/api/v1';
+export const APP_BASE_URL = import.meta.env.BASE_URL ?? '/';
 
 const redirectToAppRoot = () => {
   window.location.href = APP_BASE_URL;
@@ -55,7 +52,7 @@ const authFetch = async (url, options = {}) => {
 
 // Health check
 export const getHealth = async () => {
-  const response = await fetch('/api/health');
+  const response = await fetch(`${API_BASE_URL}/health`);
   return handleResponse(response, false);
 };
 
@@ -103,8 +100,6 @@ export const updatePerfil = async (data) => {
     body: JSON.stringify(data),
   });
 };
-
-// Agregar estas funciones al final del archivo, antes de exportar
 
 // Obtener todas las rutinas del usuario
 export const obtenerRutinas = async () => {
